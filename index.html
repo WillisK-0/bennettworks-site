@@ -118,8 +118,12 @@ p { margin: 0; }
 .price { border-top: 1px solid var(--line); padding-top: 20px; }
 .price b { display: block; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: 4px; }
 .price p { color: var(--muted); font-size: .95rem; }
-.price .assess { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
-.price .assess b { display: inline; font-size: 1rem; color: var(--fg); margin: 0; }
+.price .small { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+.price .small > b { display: block; font-size: 1rem; margin-bottom: 10px; }
+.tiers { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.tiers li { display: grid; grid-template-columns: 5.2em 1fr; gap: 12px; align-items: baseline; font-size: .95rem; color: var(--muted); }
+.tiers li b { font-family: var(--mono); font-size: .85rem; color: var(--fg); font-weight: 500; letter-spacing: .02em; }
+.tiers li span b { font-family: var(--body); font-size: .95rem; color: var(--fg); font-weight: 600; letter-spacing: 0; }
 .faq { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .faq .sheet { padding: 22px 24px; }
 .faq b { display: block; margin-bottom: 6px; }
@@ -255,7 +259,14 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
         <div class="price">
           <b>Most projects start between $5k and $15k.</b>
           <p>A connector or a single AI feature usually lands there. A new application or a full legacy rebuild is scoped separately and typically runs $20k and up. Either way you get the exact number before anything starts.</p>
-          <p class="assess"><b>Not sure yet? A one-week assessment, $2,500.</b> We read the code, talk to your team, and hand you a written plan with a fixed price for the build. Keep the plan whether or not you hire us.</p>
+          <div class="small">
+            <b>Not ready for a project? Start small.</b>
+            <ul class="tiers">
+              <li><b>FREE</b><span><b>Intro call.</b> 30 minutes. We tell you if it's a fit and what it would take.</span></li>
+              <li><b>$500</b><span><b>AI audit.</b> Half a day in your codebase. A one-page plan: what's worth building, in what order, with a price on each.</span></li>
+              <li><b>$1,500</b><span><b>Prototype week.</b> One connector or one AI feature, working against your real data in a sandbox, with a short video. Yours to keep whether or not you continue.</span></li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
