@@ -127,7 +127,7 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
     <div class="head">
       <div class="eyebrow">LIVE DEMO · SAMPLE DATA</div>
       <h1>What a custom connector can do inside Claude.</h1>
-      <p class="lede">Most people think a connector means Claude can read your data and answer in text. It can also hand back a working panel: a table you can sort and filter, a chart, a drill-in to one record, an action button. Pick a seat below, pick a question, click around the panel. Same connector, three jobs.</p>
+      <p class="lede">Most people think a connector means Claude can read your data and answer in text. It can also hand back a working panel: a table you can sort and filter, a policy answer with its source, an approval queue, a form it filled in for you. Pick a seat below, pick a question, click around. One connector, five jobs.</p>
     </div>
 
     <div class="win" id="win" aria-label="Replica of a Claude Desktop conversation">
@@ -143,9 +143,9 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
           <div class="msg user" id="userMsg"></div>
           <div class="msg ai">
             <div class="who"><i></i>Claude</div>
-            <div class="tool">Used <b>ask-your-data › query</b></div>
+            <div class="tool">Used <b id="toolName">ask-your-data › query</b></div>
           </div>
-          <div class="panel" id="panelBox"><iframe id="panel" title="Connector panel" sandbox="allow-scripts"></iframe></div>
+          <div class="panel" id="panelBox"><iframe id="panel" title="Connector panel" sandbox="allow-scripts allow-forms"></iframe></div>
           <div class="msg ai" id="aiMsg"></div>
           <div id="followups"></div>
           <div class="composer off" aria-disabled="true"><span>Chat is off in this preview. Pick a question on the left, or click around the panel.</span></div>
@@ -156,15 +156,15 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
     <div class="how">
       <div class="sheet">
         <div class="k">01 · WHAT JUST HAPPENED</div>
-        <h3>Claude wrote the SQL. The connector ran it.</h3>
-        <p>You asked in plain English. Claude turned that into a query, and the connector ran it against a read-only copy of the database. Only SELECTs are allowed, every query is logged, and results are capped. Then instead of pasting 50 rows of text, the connector handed back a panel.</p>
-        <p>Open "SQL that produced this" under any result to see exactly what ran.</p>
+        <h3>Claude called a tool. The connector answered with a panel.</h3>
+        <p>You asked in plain English. Claude picked the right tool and the connector did the work: a read-only SQL query, a search of the policy handbook, a list of refund requests, or a ticket draft. Instead of pasting the answer as text, it handed back a panel built for that job.</p>
+        <p>Four panels in this demo: a table with a chart and drill-in, a policy answer with the source highlighted, an approval queue with the rule on each row, and a form Claude fills in that you confirm.</p>
       </div>
       <div class="sheet">
         <div class="k">02 · WHY IT MATTERS</div>
         <h3>Your people stay in the tool they already use.</h3>
-        <p>No new dashboard to learn, no export to Excel. Sales asks about an account and gets the account. Support asks what's stuck and gets the list, clickable. Finance asks for revenue by region and gets a chart. Same connector, same rules, in the chat window they already have open.</p>
-        <p>The panel is yours to design. Tables and charts here, but it can be a map, a form, an approval button, whatever the job is.</p>
+        <p>No new dashboard to learn, no export to Excel. Support asks what's stuck and gets the list, clickable. A new agent asks about policy and gets the actual section, not a guess. Billing approves refunds with the rule right there. Same connector, same permissions, in the chat window they already have open.</p>
+        <p>Claude handles the words. The panel handles the clicks. The important actions, like creating a ticket or approving money, wait for a human to press the button.</p>
       </div>
     </div>
 
@@ -183,7 +183,10 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
 <script>
 (async () => {
   const $ = (id) => document.getElementById(id);
-  const [data, panelHtml] = await Promise.all([fetch("data.json").then(r => r.json()), fetch("panel.html").then(r => r.text())]);
+  const PANELS = ["table", "docs", "approvals", "ticket"];
+  const [data, ...panelSrc] = await Promise.all([fetch("data.json").then(r => r.json()), ...PANELS.map(n => fetch(n + ".html").then(r => r.text()))]);
+  const panelHtml = Object.fromEntries(PANELS.map((n, i) => [n, panelSrc[i]]));
+  let currentPanel = null;
   let scen = data.scenarios[0], cur = scen.prompts[0];
   const frame = $("panel"), box = $("panelBox");
 
@@ -208,10 +211,11 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
       };
     })();
   <\/script>`;
-  frame.srcdoc = panelHtml.replace("<body>", "<body>" + tokens + shim);
+  const mountPanel = (name) => { if (currentPanel === name) return false; currentPanel = name; frame.style.height = "160px"; frame.srcdoc = panelHtml[name].replace("<body>", "<body>" + tokens + shim); return true; };
 
   const post = (demo, payload) => frame.contentWindow.postMessage({ demo, payload }, "*");
-  const result = (p) => ({ content: [{ type: "text", text: JSON.stringify(p.result.rows).slice(0, 2000) }], structuredContent: p.result });
+  const result = (p) => ({ content: [{ type: "text", text: JSON.stringify(p.result).slice(0, 2000) }], structuredContent: p.result });
+  const decisions = {}; let ticketSeq = 5000;
   const allPrompts = data.scenarios.flatMap(sc => sc.prompts.map(p => ({ ...p, scen: sc })));
 
   function renderTabs() {
@@ -229,18 +233,24 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
     renderTabs(); renderPrompts();
     $("userMsg").textContent = p.ask;
     $("aiMsg").textContent = p.reply.replace("{n}", p.result.rowCount);
+    $("toolName").textContent = "ask-your-data › " + (p.tool ?? "query");
     $("followups").replaceChildren();
-    post("input", { sql: p.sql }); post("result", result(p)); post("view", scen.view);
+    if (mountPanel(p.ui ?? "table")) return; // the new frame asks for data when it reports ready
+    post("input", p.args ?? {}); post("result", result(p)); post("view", scen.view);
   }
 
   window.addEventListener("message", (e) => {
     const m = e.data; if (!m || !m.demo) return;
-    if (m.type === "ready") load(cur);
+    if (m.type === "ready") { post("input", cur.args ?? {}); post("result", result(cur)); post("view", scen.view); }
     if (m.type === "size" && !box.classList.contains("full")) frame.style.height = Math.min(Math.max(m.payload + 4, 120), 900) + "px";
     if (m.type === "toolRequest") {
       const { name, args } = m.payload;
-      if (name === "query") post("toolResult", result(cur));
-      else if (name === "customer_detail") { const d = data.details[args.id]; post("toolResult", d ? { content: [{ type: "text", text: "ok" }], structuredContent: d } : { content: [{ type: "text", text: "Not in the demo set" }] }); }
+      const reply = (sc) => post("toolResult", sc ? { content: [{ type: "text", text: "ok" }], structuredContent: sc } : { content: [{ type: "text", text: "Not in the demo set" }] });
+      if (name === "query" || name === "search_docs" || name === "refund_queue") reply(cur.result);
+      else if (name === "customer_detail") reply(data.details[args.id]);
+      else if (name === "decide_refund") { decisions[args.id] = args.decision; reply({ id: args.id, status: args.decision, recorded_at: new Date().toISOString() }); }
+      else if (name === "create_ticket") reply({ id: ++ticketSeq, ...args, created_at: new Date().toISOString() });
+      else reply(null);
     }
     if (m.type === "full") { box.classList.toggle("full"); if (!box.classList.contains("full")) post("size", 0); }
     if (m.type === "message") {
@@ -250,6 +260,7 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
     }
   });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && box.classList.contains("full")) { box.classList.remove("full"); } });
+  load(cur);
 })();
 </script>
 </body>
