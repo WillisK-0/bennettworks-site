@@ -41,7 +41,7 @@ p { margin: 0; }
 .nav a.navlink:hover, .nav a.navlink.on { color: var(--fg); }
 .nav a.go { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); }
 .nav a.go:hover { color: var(--fg); border-color: rgba(201,206,214,.4); }
-@media (max-width: 520px) { .nav .right { gap: 8px; } .nav a.go { padding: 9px 13px; font-size: .88rem; } .nav a.navlink { padding: 9px 3px; font-size: .9rem; } .brand { gap: 9px; font-size: 1.05rem; } .brand .wm b { display: none; } }
+@media (max-width: 520px) { .nav .container { height: 68px; } .nav .right { gap: 6px; } .nav a, .brand { white-space: nowrap; } .nav a.go { padding: 8px 12px; font-size: .84rem; } .nav a.navlink { padding: 8px 5px; font-size: .88rem; } .brand { gap: 0; } .brand .wm { display: none; } }
 footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--faint); font-size: .9rem; }
 footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .nav, main, footer { position: relative; z-index: 1; }
@@ -85,7 +85,7 @@ main { padding-block: 140px 80px; }
 .panel.full iframe { height: 100%; }
 .note { font-size: .8rem; color: #73726C; }
 .composer { margin-top: auto; border: 1px dashed rgba(31,30,29,.25); border-radius: 14px; background: #F5F4ED; padding: 12px 14px; color: #9C9A92; font-size: .92rem; }
-@media (max-width: 880px) { main { padding-block: 110px 56px; } .win .body { grid-template-columns: 1fr; } .win .side { border-right: 0; border-bottom: 1px solid rgba(31,30,29,.12); } .win .chat { padding: 18px 14px 22px; } .msg.user { max-width: 100%; } .panel.full { inset: 8px; padding: 8px; } }
+@media (max-width: 880px) { .win .bar .tag { display: none; } .win .bar .title { white-space: nowrap; } .win .tabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; } .win .tabs button { white-space: nowrap; flex: none; } .win .tabs .who { display: none; } main { padding-block: 110px 56px; } .win .body { grid-template-columns: 1fr; } .win .side { border-right: 0; border-bottom: 1px solid rgba(31,30,29,.12); } .win .chat { padding: 18px 14px 22px; } .msg.user { max-width: 100%; } .panel.full { inset: 8px; padding: 8px; } }
 
 /* explainer */
 .how { margin-top: 56px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
