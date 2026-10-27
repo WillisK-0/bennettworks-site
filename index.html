@@ -71,6 +71,7 @@ p { margin: 0; }
 @keyframes lit { 0%, 100% { box-shadow: 0 0 0 0 rgba(224,55,74,.0), 0 12px 40px -8px var(--signal-glow); } 50% { box-shadow: 0 0 0 10px rgba(224,55,74,.18), 0 12px 48px -6px var(--signal-glow); } }
 @media (prefers-reduced-motion: reduce) { .btn.lit { animation: none; } }
 @media (max-width: 880px) { .gauge { display: none; } }
+@media (max-width: 520px) { .nav .right { gap: 10px; } .nav a.go { padding: 9px 13px; font-size: .88rem; } .nav a.navlink { padding: 9px 4px; font-size: .9rem; } .brand { gap: 9px; font-size: 1.05rem; } .brand .wm b { display: none; } }
 .panel { cursor: default; }
 .panel .link { margin-top: 14px; font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; color: var(--faint); display: flex; align-items: center; gap: 8px; }
 .panel .link::before { content: ""; width: 14px; height: 1px; background: var(--faint); }
@@ -290,7 +291,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
       <div>
         <div class="no">OUR PASSION PROJECT</div>
         <h3><a href="https://ag-llama.com">AG-Llama</a></h3>
-        <p>A project management tool that AI coding agents can use directly. Connect Claude Code, Codex, or Cursor and the agent picks up the next issue, updates it as it works, and reports back on the same board your team reads. Shared skills and prompts keep every agent working the same way. We built it because tools like Jira were made for clicking, not for agents.</p>
+        <p>A project management tool that AI coding agents can use directly. Connect Claude Code, Codex, or Cursor and the agent picks up the next issue, updates it as it works, and reports back on the same board your team reads. Shared skills and prompts keep every agent working the same way. We built it because an agent shouldn't need a browser to know what to work on next.</p>
         <div class="how"><span>MCP native</span><span>Sprints and boards</span><span>Shared skills and prompts</span><span>Claude Code · Codex · Cursor</span><span>Azure DevOps sync</span></div>
       </div>
       <a class="btn-line" href="https://ag-llama.com">See it at ag-llama.com</a>

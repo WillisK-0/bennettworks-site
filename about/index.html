@@ -61,6 +61,7 @@ p { margin: 0; }
 .nav a.navlink:hover, .nav a.navlink.on { color: var(--fg); }
 .nav a.go { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); }
 .nav a.go:hover { color: var(--fg); border-color: rgba(201,206,214,.4); }
+@media (max-width: 520px) { .nav .right { gap: 10px; } .nav a.go { padding: 9px 13px; font-size: .88rem; } .nav a.navlink { padding: 9px 4px; font-size: .9rem; } .brand { gap: 9px; font-size: 1.05rem; } .brand .wm b { display: none; } }
 .nav .right { display: inline-flex; align-items: center; gap: 18px; }
 footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--faint); font-size: .9rem; }
 footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
@@ -122,7 +123,7 @@ main { padding-block: 150px 96px; }
         <p>Hi. I'm <b>Keith Willis</b>. Bennett Works is me: the person you talk to on the first call, the person who scopes the work, and the person whose commits land in your repo.</p>
         <p>I'm a working staff AI engineer at a software company, where I lead anything with AI in it: custom MCP connectors, agents that hand work to other agents, and features where a model reads real data and gives a straight answer with a source attached. Before that it was the same job without the AI: internal tools, customer-facing web apps, and the rewrite of a system that had been running the business for years. All of it on production systems paying customers use every day.</p>
         <p>I'm known for turning work around fast without cutting corners. Once we've agreed on what to build, you see working software every week until it's live, not a status report.</p>
-        <p>Somewhere in there I got tired of clicking through Jira so an AI agent could pretend to be a project manager, so I built <a href="https://ag-llama.com" target="_blank" rel="noopener">AG-Llama</a>: a project manager agents can use directly. It's my own product, and it's the thing I'd show you if you asked "but can you actually build stuff." Yes, there's a llama.</p>
+        <p>Somewhere in there I decided an agent shouldn't need a browser to know what to work on next, so I built <a href="https://ag-llama.com" target="_blank" rel="noopener">AG-Llama</a>: a project manager designed for AI agents from the start, not adapted for them after the fact. It's my own product, and it's the thing I'd show you if you asked "but can you actually build stuff." Yes, there's a llama.</p>
         <p class="ps">The company is named after my son, Bennett. He is not yet available for consulting.</p>
       </div>
     </div>
