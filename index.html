@@ -57,6 +57,8 @@ p { margin: 0; }
 .brand svg { width: 30px; height: 30px; color: var(--steel); }
 .brand .wm { letter-spacing: -0.01em; }
 .brand .wm b { font-weight: 500; color: var(--muted); margin-left: .28em; }
+.nav a.navlink { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 6px; }
+.nav a.navlink:hover, .nav a.navlink.on { color: var(--fg); }
 .nav a.go { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); }
 .nav a.go:hover { color: var(--fg); border-color: rgba(201,206,214,.4); }
 .nav .right { display: inline-flex; align-items: center; gap: 18px; }
@@ -122,17 +124,6 @@ p { margin: 0; }
 .faq b { display: block; margin-bottom: 6px; }
 .faq p { color: var(--muted); font-size: .95rem; }
 @media (max-width: 880px) { .how .eng { grid-template-columns: 1fr; gap: 32px; padding: 26px 20px; } .faq { grid-template-columns: 1fr; } }
-.about { padding-block: 0 96px; }
-.about .sheet { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 48px; padding: 40px 44px; align-items: start; }
-.about h2 { max-width: 10ch; }
-.about .tag { margin-top: 14px; color: var(--muted); font-size: .95rem; max-width: 22rem; }
-.about .bio p { color: var(--fg); font-size: 1.05rem; line-height: 1.6; margin: 0 0 18px; }
-.about .bio p:last-child { margin-bottom: 0; }
-.about .bio b { color: var(--fg); }
-.about .bio a { color: var(--fg); text-decoration: underline; text-decoration-color: var(--signal); text-underline-offset: 3px; }
-.about .bio a:hover { color: var(--signal-hover); }
-.about .bio .ps { color: var(--muted); font-size: .95rem; border-top: 1px solid var(--line); padding-top: 16px; margin-top: 4px; }
-@media (max-width: 880px) { .about .sheet { grid-template-columns: 1fr; gap: 20px; padding: 26px 20px; } .about h2 { max-width: none; } }
 .proof { padding-block: 96px; border-top: 1px solid var(--line); }
 .proof .top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; }
 .proof h2 { max-width: 14ch; }
@@ -189,6 +180,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
       <span class="wm">Bennett<b>Works</b></span>
     </a>
     <span class="right">
+      <a class="navlink" href="/about/">About</a>
       <a class="go" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
     </span>
   </div>
@@ -271,24 +263,6 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
       <div class="sheet"><b>What do you need from us?</b><p>Access to the repo and a test environment, one person who can answer questions about the system, and an hour a week for the demo.</p></div>
       <div class="sheet"><b>Which AI models do you use?</b><p>Whatever fits the job and your data rules. Claude and OpenAI through their APIs, or an open model on your own infrastructure if nothing can leave your network.</p></div>
       <div class="sheet"><b>What happens after launch?</b><p>Thirty days of support are included. After that, a monthly retainer if you want us on call, or nothing. The code is yours and documented either way.</p></div>
-    </div>
-  </div>
-</section>
-
-<section class="about" id="about">
-  <div class="container">
-    <div class="sheet">
-      <div>
-        <h2>Who does the work</h2>
-        <p class="tag">One senior engineer. No account managers between you and the person writing the code.</p>
-      </div>
-      <div class="bio">
-        <p>Hi. I'm <b>Keith Willis</b>. Bennett Works is me: the person you talk to on the first call, the person who scopes the work, and the person whose commits land in your repo.</p>
-        <p>I'm a working staff AI engineer at a software company, where I lead anything with AI in it: custom MCP connectors, agents that hand work to other agents, and features where a model reads real data and gives a straight answer with a source attached. Before that it was the same job without the AI: internal tools, customer-facing web apps, and the rewrite of a system that had been running the business for years. All of it on production systems paying customers use every day.</p>
-        <p>I'm known for turning work around fast without cutting corners. Once we've agreed on what to build, you see working software every week until it's live, not a status report.</p>
-        <p>Somewhere in there I got tired of clicking through Jira so an AI agent could pretend to be a project manager, so I built <a href="https://ag-llama.com" target="_blank" rel="noopener">AG-Llama</a>: a project manager agents can use directly. It's my own product, and it's the thing I'd show you if you asked "but can you actually build stuff." Yes, there's a llama.</p>
-        <p class="ps">The company is named after my son, Bennett. He is not yet available for consulting.</p>
-      </div>
     </div>
   </div>
 </section>

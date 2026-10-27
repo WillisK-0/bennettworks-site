@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Who does the work at Bennett Works: Keith Willis, a working staff AI engineer. Bennett Works builds AI into the software your company already runs: custom AI connectors and features, new web applications, and legacy modernization. Fixed price, you own the code. Houston, remote.">
+<meta name="theme-color" content="#0E1013">
+<meta property="og:title" content="About Bennett Works">
+<meta property="og:description" content="AI connectors and features for the systems you already have, new web applications, and legacy software rebuilt on a modern stack. Fixed price, you own the code.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bennettworks.io/about/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1013'/%3E%3Ccircle cx='16' cy='16' r='11.5' fill='none' stroke='%23C7CBD2' stroke-width='2.6'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23C7CBD2'/%3E%3Cpath d='M16 12.8V6.2M13.2 17.6l-5.8 3.4M18.8 17.6l5.8 3.4' stroke='%23C7CBD2' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="canonical" href="https://bennettworks.io/about/">
+<title>About Bennett Works</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+
+/* Layout: dark single-theme by choice. A fixed canvas draws a scroll-scrubbed Rube Goldberg machine in steel line-art behind the page; content sits left, machine right. Graphite ground, steel lines, one red indicator color. Plus Jakarta Sans, Plex Mono for engineering labels. */
+:root {
+  --bg: #0E1013;
+  --bg-2: #15181D;
+  --fg: #F2F3F5;
+  --muted: #A9AEB7;
+  --faint: #6E7480;
+  --steel: #C7CBD2;
+  --line: rgba(201,206,214,.14);
+  --glass: rgba(17,19,24,.74);
+  --glass-hover: rgba(201,206,214,.08);
+  --signal: #E0374A;
+  --signal-hover: #F04A5C;
+  --signal-glow: rgba(224,55,74,.32);
+  --display: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+  --body: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: radial-gradient(1100px 650px at 85% -5%, #1E2229 0%, transparent 60%), radial-gradient(900px 600px at -5% 100%, #181B21 0%, transparent 60%), var(--bg); background-attachment: fixed; color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+.container { max-width: 1120px; margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
+h1 { font-size: clamp(2.6rem, 6.2vw, 5rem); font-weight: 700; line-height: 1.04; letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; }
+h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+p { margin: 0; }
+
+.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1rem; padding: 16px 28px; border-radius: 999px; background: var(--signal); color: #fff; transition: transform .2s ease, box-shadow .3s ease, background .2s; }
+.btn:hover { background: var(--signal-hover); transform: translateY(-1px); box-shadow: 0 12px 40px -8px var(--signal-glow), 0 0 0 6px rgba(224,55,74,.08); }
+.btn-line { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; padding: 16px 22px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); transition: border-color .2s, background .2s; }
+.btn-line:hover { border-color: rgba(201,206,214,.4); background: var(--glass); }
+.nav { position: absolute; inset: env(safe-area-inset-top, 0px) 0 auto; z-index: 5; }
+.nav .container { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 12px; }
+.brand svg { width: 30px; height: 30px; color: var(--steel); }
+.brand .wm { letter-spacing: -0.01em; }
+.brand .wm b { font-weight: 500; color: var(--muted); margin-left: .28em; }
+.nav a.navlink { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 6px; }
+.nav a.navlink:hover, .nav a.navlink.on { color: var(--fg); }
+.nav a.go { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); }
+.nav a.go:hover { color: var(--fg); border-color: rgba(201,206,214,.4); }
+.nav .right { display: inline-flex; align-items: center; gap: 18px; }
+footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--faint); font-size: .9rem; }
+footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+.nav, main, footer { position: relative; z-index: 1; }
+.bgx { position: fixed; inset: 0; z-index: 0; pointer-events: none; background-image: linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size: 72px 72px; opacity: .35; }
+.bgx svg { position: absolute; right: -8vw; top: 6vh; width: min(70vh, 60vw); height: auto; color: var(--steel); opacity: .07; }
+main { padding-block: 150px 96px; }
+.about { display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); gap: 56px; align-items: start; }
+.about .lead { position: sticky; top: 110px; }
+.about .tag { margin-top: 16px; color: var(--muted); max-width: 22rem; }
+.facts { list-style: none; margin: 28px 0 0; padding: 0; display: grid; gap: 10px; font-family: var(--mono); font-size: .78rem; letter-spacing: .04em; color: var(--faint); }
+.facts li { display: flex; gap: 12px; }
+.facts li b { color: var(--muted); font-weight: 500; min-width: 7ch; }
+.bio { background: rgba(14,16,19,.86); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; padding: 40px 44px; }
+.bio p { color: var(--fg); font-size: 1.1rem; line-height: 1.65; margin: 0 0 20px; }
+.bio p:last-child { margin-bottom: 0; }
+.bio a { text-decoration: underline; text-decoration-color: var(--signal); text-underline-offset: 3px; }
+.bio a:hover { color: var(--signal-hover); }
+.bio .ps { color: var(--muted); font-size: .95rem; border-top: 1px solid var(--line); padding-top: 18px; }
+.cta { margin-top: 28px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+.cta .note { color: var(--faint); font-size: .9rem; }
+@media (max-width: 880px) { main { padding-block: 110px 64px; } .about { grid-template-columns: 1fr; gap: 24px; } .about .lead { position: static; } .bio { padding: 26px 20px; } .nav a.navlink { padding: 10px 2px; } }
+</style>
+</head>
+<body>
+
+<div class="bgx" aria-hidden="true">
+  <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="16" cy="16" r="12.6" stroke-width=".9"/><circle cx="16" cy="16" r="10.6" stroke-width=".3"/><circle cx="16" cy="16" r="3.4" fill="currentColor" stroke="none"/><path d="M16 12.6V5.2M13.1 17.7l-6.4 3.7M18.9 17.7l6.4 3.7" stroke-width=".9"/></svg>
+</div>
+
+<div class="nav">
+  <div class="container">
+    <a class="brand" href="/" aria-label="Bennett Works">
+      <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="16" cy="16" r="12.6" stroke-width="2.8"/><circle cx="16" cy="16" r="3.4" fill="currentColor" stroke="none"/><path d="M16 12.6V5.2M13.1 17.7l-6.4 3.7M18.9 17.7l6.4 3.7" stroke-width="2.4"/></svg>
+      <span class="wm">Bennett<b>Works</b></span>
+    </a>
+    <span class="right">
+      <a class="navlink on" href="/about/">About</a>
+      <a class="go" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
+    </span>
+  </div>
+</div>
+
+<main>
+  <div class="container">
+    <div class="about">
+      <div class="lead">
+        <h1>Who does the work</h1>
+        <p class="tag">One senior engineer. No account managers between you and the person writing the code.</p>
+        <ul class="facts">
+          <li><b>BASE</b><span>Houston, Texas. Remote everywhere.</span></li>
+          <li><b>STACK</b><span>.NET, React, Node, Postgres, Azure, Firebase</span></li>
+          <li><b>MODELS</b><span>Claude, OpenAI, open models on your infra</span></li>
+          <li><b>BUILT</b><span><a href="https://ag-llama.com" target="_blank" rel="noopener">ag-llama.com</a></span></li>
+        </ul>
+      </div>
+      <div class="bio">
+        <p>Hi. I'm <b>Keith Willis</b>. Bennett Works is me: the person you talk to on the first call, the person who scopes the work, and the person whose commits land in your repo.</p>
+        <p>I'm a working staff AI engineer at a software company, where I lead anything with AI in it: custom MCP connectors, agents that hand work to other agents, and features where a model reads real data and gives a straight answer with a source attached. Before that it was the same job without the AI: internal tools, customer-facing web apps, and the rewrite of a system that had been running the business for years. All of it on production systems paying customers use every day.</p>
+        <p>I'm known for turning work around fast without cutting corners. Once we've agreed on what to build, you see working software every week until it's live, not a status report.</p>
+        <p>Somewhere in there I got tired of clicking through Jira so an AI agent could pretend to be a project manager, so I built <a href="https://ag-llama.com" target="_blank" rel="noopener">AG-Llama</a>: a project manager agents can use directly. It's my own product, and it's the thing I'd show you if you asked "but can you actually build stuff." Yes, there's a llama.</p>
+        <p class="ps">The company is named after my son, Bennett. He is not yet available for consulting.</p>
+      </div>
+    </div>
+    <div class="cta">
+      <a class="btn" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
+      <a class="btn-line" href="/#how">How an engagement runs</a>
+      <span class="note">30 minutes, no prep needed.</span>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container"><span>© 2026 Bennett Works</span><span>Houston · Remote</span></div>
+</footer>
+</body>
+</html>
