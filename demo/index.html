@@ -84,18 +84,11 @@ main { padding-block: 140px 80px; }
 .panel.full { position: fixed; inset: 24px; z-index: 50; padding: 16px; box-shadow: 0 40px 100px rgba(0,0,0,.5); }
 .panel.full iframe { height: 100%; }
 .note { font-size: .8rem; color: #73726C; }
-.composer { margin-top: auto; border: 1px solid rgba(31,30,29,.2); border-radius: 14px; background: #fff; padding: 8px 8px 8px 14px; display: flex; gap: 10px; align-items: center; }
-.composer:focus-within { border-color: rgba(31,30,29,.45); }
-.composer input { flex: 1; border: 0; outline: 0; font: inherit; font-size: .95rem; color: #141413; background: transparent; min-width: 0; }
-.composer input::placeholder { color: #9C9A92; }
-.composer button { border: 0; background: #141413; color: #fff; font: inherit; font-size: .85rem; font-weight: 600; padding: 8px 14px; border-radius: 10px; cursor: pointer; }
-.composer button:hover { background: #3D3D3A; }
-.chat .try { font-size: .78rem; color: #73726C; margin-top: -8px; }
-.chat .try b { font-weight: 500; color: #3D3D3A; cursor: pointer; text-decoration: underline; text-decoration-color: rgba(31,30,29,.3); text-underline-offset: 2px; }
+.composer { margin-top: auto; border: 1px dashed rgba(31,30,29,.25); border-radius: 14px; background: #F5F4ED; padding: 12px 14px; color: #9C9A92; font-size: .92rem; }
 @media (max-width: 880px) { main { padding-block: 110px 56px; } .win .body { grid-template-columns: 1fr; } .win .side { border-right: 0; border-bottom: 1px solid rgba(31,30,29,.12); } .win .chat { padding: 18px 14px 22px; } .msg.user { max-width: 100%; } .panel.full { inset: 8px; padding: 8px; } }
 
 /* explainer */
-.how { margin-top: 56px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.how { margin-top: 56px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
 .sheet { background: rgba(14,16,19,.86); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; padding: 26px 26px 28px; }
 .sheet .k { font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; color: var(--signal); margin-bottom: 10px; }
 .sheet h3 { margin-bottom: 10px; }
@@ -134,7 +127,7 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
     <div class="head">
       <div class="eyebrow">LIVE DEMO · SAMPLE DATA</div>
       <h1>What a custom connector can do inside Claude.</h1>
-      <p class="lede">Most people think a connector means Claude can read your data and answer in text. It can also hand back a working panel: a table you can sort and filter, a chart, a drill-in to one record, an action button. Pick a seat below, ask a question, click around. Same connector, three jobs.</p>
+      <p class="lede">Most people think a connector means Claude can read your data and answer in text. It can also hand back a working panel: a table you can sort and filter, a chart, a drill-in to one record, an action button. Pick a seat below, pick a question, click around the panel. Same connector, three jobs.</p>
     </div>
 
     <div class="win" id="win" aria-label="Replica of a Claude Desktop conversation">
@@ -155,8 +148,7 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
           <div class="panel" id="panelBox"><iframe id="panel" title="Connector panel" sandbox="allow-scripts"></iframe></div>
           <div class="msg ai" id="aiMsg"></div>
           <div id="followups"></div>
-          <form class="composer" id="composer"><input id="ask" type="text" placeholder="Ask something about the data…" autocomplete="off" aria-label="Ask something about the data"><button type="submit">Send</button></form>
-          <div class="try" id="try"></div>
+          <div class="composer off" aria-disabled="true"><span>Chat is off in this preview. Pick a question on the left, or click around the panel.</span></div>
         </section>
       </div>
     </div>
@@ -174,20 +166,12 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
         <p>No new dashboard to learn, no export to Excel. Sales asks about an account and gets the account. Support asks what's stuck and gets the list, clickable. Finance asks for revenue by region and gets a chart. Same connector, same rules, in the chat window they already have open.</p>
         <p>The panel is yours to design. Tables and charts here, but it can be a map, a form, an approval button, whatever the job is.</p>
       </div>
-      <div class="sheet">
-        <div class="k">03 · TRY IT FOR REAL</div>
-        <h3>Run this connector in your own Claude Desktop.</h3>
-        <p>The whole thing is open source with a seeded sample database. No API key needed. Clone it, point Claude Desktop at it, ask it something.</p>
-        <pre class="code">git clone https://github.com/WillisK-0/ask-your-data
-cd ask-your-data &amp;&amp; npm install &amp;&amp; npm run seed</pre>
-        <p>Then add it in Claude Desktop under Settings › Developer › Edit Config. The <a class="u" href="https://github.com/WillisK-0/ask-your-data#readme" target="_blank" rel="noopener">README</a> has the snippet. Swap the SQLite adapter for Postgres or SQL Server and it's your data.</p>
-      </div>
     </div>
 
     <div class="cta">
       <a class="btn" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
       <a class="btn-line" href="/#how">See pricing</a>
-      <span class="fine">A prototype week on your data is $1,500, and you keep it.</span>
+      <span class="fine">A prototype week on your data is $1,500, and you keep it. Want this on your database? That is the prototype.</span>
     </div>
   </div>
 </main>
@@ -240,14 +224,52 @@ cd ask-your-data &amp;&amp; npm install &amp;&amp; npm run seed</pre>
     for (const p of scen.prompts) { const b = document.createElement("button"); b.textContent = p.ask; b.className = p.id === cur.id ? "on" : ""; b.onclick = () => load(p); box.appendChild(b); }
     $("sideLab").textContent = scen.label + " questions";
   }
-  function load(p, typed) {
+  function load(p) {
     cur = p; if (p.scen) scen = p.scen;
     renderTabs(); renderPrompts();
-    $("userMsg").textContent = typed ?? p.ask;
+    $("userMsg").textContent = p.ask;
     $("aiMsg").textContent = p.reply.replace("{n}", p.result.rowCount);
     $("followups").replaceChildren();
     post("input", { sql: p.sql }); post("result", result(p)); post("view", scen.view);
-    if (typed) box.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+
+  window.addEventListener("message", (e) => { const m = e.data; if (!m) return;
+        if (m.demo === "result" && onResult) onResult(m.payload);
+        if (m.demo === "input" && onInput) onInput({ arguments: m.payload });
+        if (m.demo === "view") window.dispatchEvent(new CustomEvent("demo:view", { detail: m.payload })); });
+      const ro = new ResizeObserver(() => send("size", document.body.scrollHeight)); ro.observe(document.body); document.querySelectorAll("#root").forEach(el => ro.observe(el));
+      return {
+        onResult: (fn) => { onResult = fn; }, onInput: (fn) => { onInput = fn; },
+        callTool: async (name, args) => { await wait(name === "query" ? 500 : 350); return await new Promise((res) => { const h = (e) => { if (e.data && e.data.demo === "toolResult") { window.removeEventListener("message", h); res(e.data.payload); } }; window.addEventListener("message", h); send("toolRequest", { name, args }); }); },
+        sendMessage: (text) => send("message", text),
+        toggleFull: () => send("full"),
+        connect: () => send("ready"),
+      };
+    })();
+  <\/script>`;
+  frame.srcdoc = panelHtml.replace("<body>", "<body>" + tokens + shim);
+
+  const post = (demo, payload) => frame.contentWindow.postMessage({ demo, payload }, "*");
+  const result = (p) => ({ content: [{ type: "text", text: JSON.stringify(p.result.rows).slice(0, 2000) }], structuredContent: p.result });
+  const allPrompts = data.scenarios.flatMap(sc => sc.prompts.map(p => ({ ...p, scen: sc })));
+
+  function renderTabs() {
+    const t = $("tabs"); t.replaceChildren();
+    for (const sc of data.scenarios) { const b = document.createElement("button"); b.textContent = sc.label; b.className = sc.id === scen.id ? "on" : ""; b.onclick = () => { scen = sc; load(sc.prompts[0]); }; t.appendChild(b); }
+    const w = document.createElement("span"); w.className = "who"; w.textContent = "Signed in as: " + scen.who; t.appendChild(w);
+  }
+  function renderPrompts() {
+    const box = $("prompts"); box.replaceChildren();
+    for (const p of scen.prompts) { const b = document.createElement("button"); b.textContent = p.ask; b.className = p.id === cur.id ? "on" : ""; b.onclick = () => load(p); box.appendChild(b); }
+    $("sideLab").textContent = scen.label + " questions";
+  }
+  function load(p) {
+    cur = p; if (p.scen) scen = p.scen;
+    renderTabs(); renderPrompts();
+    $("userMsg").textContent = p.ask;
+    $("aiMsg").textContent = p.reply.replace("{n}", p.result.rowCount);
+    $("followups").replaceChildren();
+    post("input", { sql: p.sql }); post("result", result(p)); post("view", scen.view);
   }
 
   // Composer: match what the visitor types to the closest scripted question. Keyword hits count double; SQL is ignored so column names don't pollute it.
@@ -289,7 +311,7 @@ cd ask-your-data &amp;&amp; npm install &amp;&amp; npm run seed</pre>
     if (m.type === "full") { box.classList.toggle("full"); if (!box.classList.contains("full")) post("size", 0); }
     if (m.type === "message") {
       const u = document.createElement("div"); u.className = "msg user"; u.textContent = m.payload;
-      const a = document.createElement("div"); a.className = "msg ai"; a.innerHTML = '<div class="who"><i></i>Claude</div>'; const t = document.createElement("div"); t.textContent = "In the real connector this lands in the chat as your next message and Claude acts on it, calling the connector's tools as it needs to. This replica stops here."; a.appendChild(t);
+      const a = document.createElement("div"); a.className = "msg ai"; a.innerHTML = '<div class="who"><i></i>Claude</div>'; const t = document.createElement("div"); t.textContent = "In Claude Desktop this becomes your next message and Claude acts on it, using the connector's tools. Chat is off in this preview, so it stops here."; a.appendChild(t);
       $("followups").append(u, a); a.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   });
