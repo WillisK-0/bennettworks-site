@@ -154,8 +154,9 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
 
 @media (max-width: 880px) {
   .hero { min-height: auto; }
-  .hero .container { padding-block: 46vh 48px; }
-  .hero h1 { font-size: clamp(2.3rem, 11vw, 3.2rem); }
+  .hero .container { padding-block: 110px 48px; }
+  .hero .copy { background: rgba(14,16,19,.84); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; padding: 22px 20px 24px; }
+  .hero .lede { font-size: 1.1rem; }
   .grid3 { grid-template-columns: 1fr; }
   .proof .top { grid-template-columns: 1fr; gap: 28px; }
   .caps { grid-template-columns: 1fr; }
@@ -184,6 +185,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
 
 <header class="hero" id="top">
   <div class="container">
+   <div class="copy">
     <h1>We build AI into the software your company already runs.</h1>
     <p class="lede">Three things: AI connectors and features for the systems you already have, new web applications, and rebuilding legacy software on a modern stack. Built in your codebase, on your infrastructure.</p>
     <div class="actions">
@@ -191,6 +193,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
       <a class="btn-line" href="#how">How it works</a>
     </div>
     <p class="note">30 minutes on the calendar. We'll tell you if it's a fit and what it would take.</p>
+   </div>
   </div>
 </header>
 
@@ -331,7 +334,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
   function ei(t) { return t * t * t; }
   function line(x1, y1, x2, y2, col, w) { ctx.strokeStyle = col; ctx.lineWidth = w || 1.5; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
   function circle(x, y, r, fill, stroke, w) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = w || 1.5; ctx.stroke(); } }
-  function label(x, y, text, n) { if (narrow) return; var f = n && focus[n]; ctx.font = (f ? '500 11px' : '500 10px') + ' "IBM Plex Mono", monospace'; ctx.fillStyle = f ? red(.95) : st(anyFocus ? .3 : .45); ctx.fillText(text, x, y); }
+  function label(x, y, text, n) { var f = n && focus[n]; ctx.font = (f ? '500 11px' : '500 10px') + ' "IBM Plex Mono", monospace'; ctx.fillStyle = f ? red(.95) : st(anyFocus ? .3 : .45); ctx.fillText(text, x, y); }
   function bolt(x, y) { circle(x, y, 3, DARK, st(.6), 1); line(x - 1.6, y - 1.6, x + 1.6, y + 1.6, st(.6), 1); line(x - 1.6, y + 1.6, x + 1.6, y - 1.6, st(.6), 1); }
   function box(n, x, y, w, h) { if (!focus[n]) return; ctx.save(); ctx.setLineDash([5, 5]); ctx.lineDashOffset = -tm * 30; ctx.strokeStyle = red(.8); ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h); ctx.setLineDash([]); ctx.fillStyle = red(.05); ctx.fillRect(x, y, w, h); ctx.restore(); }
   function torque(x, y) { var d = Math.hypot(mxs - x, mys - y); return d < 260 ? (1 - d / 260) : 0; }
@@ -440,8 +443,8 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
 
     ctx.save();
     ctx.translate(-pdx * 22 * par, -pdy * 14 * par);
-    ctx.globalAlpha = anyFocus ? 1 : narrow ? .6 * (1 - .67 * seg(p, .06, .2)) : (1 - .6 * seg(p, .12, .3) + .35 * seg(p, .8, .95));
-    var X0 = narrow ? W * .05 : W * .50, X1 = narrow ? W * .95 : W * .97, Y0 = narrow ? H * .1 : H * .09, Y1 = narrow ? H * .44 : H * .93, sx = X1 - X0, sy = Y1 - Y0;
+    ctx.globalAlpha = anyFocus ? 1 : (narrow ? .45 : 1) * (1 - .6 * seg(p, .12, .3) + .35 * seg(p, .8, .95));
+    var X0 = narrow ? W * .06 : W * .50, X1 = narrow ? W * .94 : W * .97, Y0 = H * .09, Y1 = H * .93, sx = X1 - X0, sy = Y1 - Y0;
     function X(u) { return X0 + u * sx; } function Y(v) { return Y0 + v * sy; }
 
     // Frame rails with bolts
