@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Bennett Works builds AI into the software your company already runs: custom AI connectors and features, new web applications, and legacy modernization. Houston, remote.">
+<meta name="description" content="Bennett Works builds AI into the software your company already runs: custom AI connectors and features, new web applications, and legacy modernization. Fixed price, you own the code. Houston, remote.">
 <meta name="theme-color" content="#0E1013">
 <meta property="og:title" content="Bennett Works">
-<meta property="og:description" content="AI connectors and features for the systems you already have, new web applications, and legacy software rebuilt on a modern stack.">
+<meta property="og:description" content="AI connectors and features for the systems you already have, new web applications, and legacy software rebuilt on a modern stack. Fixed price, you own the code.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bennettworks.io/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1013'/%3E%3Ccircle cx='16' cy='16' r='11.5' fill='none' stroke='%23C7CBD2' stroke-width='2.6'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23C7CBD2'/%3E%3Cpath d='M16 12.8V6.2M13.2 17.6l-5.8 3.4M18.8 17.6l5.8 3.4' stroke='%23C7CBD2' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -26,9 +26,9 @@
   --line: rgba(201,206,214,.14);
   --glass: rgba(17,19,24,.74);
   --glass-hover: rgba(201,206,214,.08);
-  --signal: #C97A3C;
-  --signal-hover: #D98A4C;
-  --signal-glow: rgba(201,122,60,.35);
+  --signal: #E0374A;
+  --signal-hover: #F04A5C;
+  --signal-glow: rgba(224,55,74,.32);
   --display: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
   --body: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
   --mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
@@ -47,7 +47,7 @@ h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
 p { margin: 0; }
 
 .btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1rem; padding: 16px 28px; border-radius: 999px; background: var(--signal); color: #fff; transition: transform .2s ease, box-shadow .3s ease, background .2s; }
-.btn:hover { background: var(--signal-hover); transform: translateY(-1px); box-shadow: 0 12px 40px -8px var(--signal-glow), 0 0 0 6px rgba(201,122,60,.08); }
+.btn:hover { background: var(--signal-hover); transform: translateY(-1px); box-shadow: 0 12px 40px -8px var(--signal-glow), 0 0 0 6px rgba(224,55,74,.08); }
 .btn-line { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; padding: 16px 22px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); transition: border-color .2s, background .2s; }
 .btn-line:hover { border-color: rgba(201,206,214,.4); background: var(--glass); }
 
@@ -66,7 +66,7 @@ p { margin: 0; }
 .gauge #stage { min-width: 11ch; }
 .brand svg { transition: transform .15s linear; }
 .btn.lit { animation: lit 1.4s ease-in-out infinite; }
-@keyframes lit { 0%, 100% { box-shadow: 0 0 0 0 rgba(201,122,60,.0), 0 12px 40px -8px var(--signal-glow); } 50% { box-shadow: 0 0 0 10px rgba(201,122,60,.18), 0 12px 48px -6px var(--signal-glow); } }
+@keyframes lit { 0%, 100% { box-shadow: 0 0 0 0 rgba(224,55,74,.0), 0 12px 40px -8px var(--signal-glow); } 50% { box-shadow: 0 0 0 10px rgba(224,55,74,.18), 0 12px 48px -6px var(--signal-glow); } }
 @media (prefers-reduced-motion: reduce) { .btn.lit { animation: none; } }
 @media (max-width: 880px) { .gauge { display: none; } }
 .panel { cursor: default; }
@@ -100,6 +100,26 @@ p { margin: 0; }
 .panel h3 { margin-bottom: 10px; }
 .panel p { color: var(--muted); font-size: .98rem; }
 
+.how { padding-block: 24px 96px; }
+.how .eng { padding: 36px 36px 32px; display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 48px; }
+.how h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); margin-bottom: 22px; }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 16px; counter-reset: step; }
+.steps li { display: grid; grid-template-columns: 34px 1fr; gap: 14px; align-items: start; }
+.steps li::before { counter-increment: step; content: "0" counter(step); font-family: var(--mono); font-size: .8rem; color: var(--signal); padding-top: 4px; }
+.steps b { display: block; font-weight: 700; margin-bottom: 2px; }
+.steps p { color: var(--muted); font-size: .95rem; }
+.terms h3 { font-size: 1rem; color: var(--muted); font-weight: 600; margin-bottom: 14px; }
+.terms ul { list-style: none; margin: 0 0 26px; padding: 0; display: grid; gap: 10px; }
+.terms li { position: relative; padding-left: 22px; font-size: .98rem; }
+.terms li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 2px; background: var(--steel); }
+.price { border-top: 1px solid var(--line); padding-top: 20px; }
+.price b { display: block; font-size: 1.4rem; letter-spacing: -0.02em; margin-bottom: 4px; }
+.price p { color: var(--muted); font-size: .95rem; }
+.faq { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.faq .sheet { padding: 22px 24px; }
+.faq b { display: block; margin-bottom: 6px; }
+.faq p { color: var(--muted); font-size: .95rem; }
+@media (max-width: 880px) { .how .eng { grid-template-columns: 1fr; gap: 32px; padding: 26px 20px; } .faq { grid-template-columns: 1fr; } }
 .proof { padding-block: 96px; border-top: 1px solid var(--line); }
 .proof .top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; }
 .proof h2 { max-width: 14ch; }
@@ -167,7 +187,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
     <p class="lede">Three things: AI connectors and features for the systems you already have, new web applications, and rebuilding legacy software on a modern stack. Built in your codebase, on your infrastructure.</p>
     <div class="actions">
       <a class="btn" id="book" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
-      <a class="btn-line" href="#services">What we build</a>
+      <a class="btn-line" href="#how">How it works</a>
     </div>
     <p class="note">30 minutes on the calendar. We'll tell you if it's a fit and what it would take.</p>
   </div>
@@ -197,6 +217,42 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
         <p>Old desktop and web apps rebuilt on a modern stack one screen at a time, so nothing stops working during the move. If the original developers are gone and there's no documentation, we start by recovering how it works. Every rebuilt screen is checked against your real data before it goes live.</p>
         <div class="link">STAGES 03, 04, 05 ON THE DRAWING</div>
       </article>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how">
+  <div class="container">
+    <div class="sheet eng">
+      <div>
+        <h2>How an engagement runs</h2>
+        <ol class="steps">
+          <li><div><b>A 30-minute call</b><p>You tell us what you're trying to build or fix and what it runs on. We tell you if it's a fit and what it would roughly take.</p></div></li>
+          <li><div><b>A fixed-price proposal</b><p>Within a few days: scope, price, and a delivery date in writing. No hourly meter unless you prefer one.</p></div></li>
+          <li><div><b>Build in your codebase, demo every week</b><p>Work happens in your repo and your accounts. You see working software weekly, not a slide deck at the end.</p></div></li>
+          <li><div><b>Handover and a month of support</b><p>Tests, documentation, and a walkthrough for your team. We stay on for 30 days after launch for anything that comes up.</p></div></li>
+        </ol>
+      </div>
+      <div class="terms">
+        <h3>The terms, up front</h3>
+        <ul>
+          <li>You own the code and everything we produce.</li>
+          <li>NDA signed before we look at anything.</li>
+          <li>Your data stays in your systems and never trains a model.</li>
+          <li>Senior engineers do the work. No handoff to a junior team.</li>
+          <li>Pay by milestone, with the last payment after it's live.</li>
+        </ul>
+        <div class="price">
+          <b>Most projects run $5k to $60k.</b>
+          <p>A connector or a single AI feature is usually $5k to $15k. A new application or a legacy rebuild is usually $20k to $60k. You get the exact number before anything starts.</p>
+        </div>
+      </div>
+    </div>
+    <div class="faq">
+      <div class="sheet"><b>How long does it take?</b><p>A connector or feature: two to four weeks. A new app or a rebuild: six to twelve weeks, delivered screen by screen so you're never waiting on a big bang.</p></div>
+      <div class="sheet"><b>What do you need from us?</b><p>Access to the repo and a test environment, one person who can answer questions about the system, and an hour a week for the demo.</p></div>
+      <div class="sheet"><b>Which AI models do you use?</b><p>Whatever fits the job and your data rules. Claude and OpenAI through their APIs, or an open model on your own infrastructure if nothing can leave your network.</p></div>
+      <div class="sheet"><b>What happens after launch?</b><p>Thirty days of support are included. After that, a monthly retainer if you want us on call, or nothing. The code is yours and documented either way.</p></div>
     </div>
   </div>
 </section>
@@ -258,7 +314,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
   var W, H, dpr = Math.min(window.devicePixelRatio || 1, 2), scrollY = window.scrollY || 0, narrow = false;
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var mx = -9999, my = -9999, mxs = 0, mys = 0, focus = {}, anyFocus = false, tm = 0, lastP = 0;
-  var STEEL = '199,203,210', RED = '201,122,60', INKC = '242,243,245';
+  var STEEL = '199,203,210', RED = '224,55,74', INKC = '242,243,245';
   function st(a) { return 'rgba(' + STEEL + ',' + a + ')'; }
   function red(a) { return 'rgba(' + RED + ',' + a + ')'; }
   function ink(a) { return 'rgba(' + INKC + ',' + a + ')'; }
@@ -279,19 +335,27 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
   function box(n, x, y, w, h) { if (!focus[n]) return; ctx.save(); ctx.setLineDash([5, 5]); ctx.lineDashOffset = -tm * 30; ctx.strokeStyle = red(.8); ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h); ctx.setLineDash([]); ctx.fillStyle = red(.05); ctx.fillRect(x, y, w, h); ctx.restore(); }
   function torque(x, y) { var d = Math.hypot(mxs - x, mys - y); return d < 260 ? (1 - d / 260) : 0; }
   function gear(x, y, r, teeth, angle, col, w) {
+    // Flywheel: heavy rim, inner rim edge, solid hub, three spokes. Same mark as the logo.
     ctx.save(); ctx.translate(x, y); ctx.rotate(angle);
-    ctx.strokeStyle = col; ctx.lineWidth = w || 1.5; ctx.fillStyle = DARK; ctx.beginPath();
-    for (var i = 0; i < teeth * 2; i++) { var a0 = (i / (teeth * 2)) * Math.PI * 2, rr = (i % 2 === 0) ? r : r * .84; var px = Math.cos(a0) * rr, py = Math.sin(a0) * rr; if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }
-    ctx.closePath(); ctx.fill(); ctx.stroke();
-    circle(0, 0, r * .4, null, col); circle(0, 0, 3.5, col);
-    for (var k = 0; k < 5; k++) { var a1 = k * Math.PI * 2 / 5; line(Math.cos(a1) * r * .4, Math.sin(a1) * r * .4, Math.cos(a1) * r * .74, Math.sin(a1) * r * .74, col, 1.2); }
+    var rimW = Math.max(2.2, r * .11), lw = w || 1.5;
+    circle(0, 0, r, DARK, col, rimW);
+    if (r > 28) circle(0, 0, r - rimW * 1.6, null, col, lw * .8);
+    circle(0, 0, Math.max(3.5, r * .17), col);
+    for (var k = 0; k < 3; k++) { var a1 = -Math.PI / 2 + k * Math.PI * 2 / 3; line(Math.cos(a1) * r * .17, Math.sin(a1) * r * .17, Math.cos(a1) * (r - rimW * 1.6), Math.sin(a1) * (r - rimW * 1.6), col, Math.max(1.5, r * .07)); }
+    ctx.restore();
+  }
+  function vbelt(x1, y1, r1, x2, y2, r2, col, off) {
+    // Two external tangent lines between wheels, dashed so you can see it move
+    var d = Math.hypot(x2 - x1, y2 - y1); if (d < 1) return; var a = Math.atan2(y2 - y1, x2 - x1), b = Math.acos(Math.min(1, Math.max(-1, (r1 - r2) / d)));
+    ctx.save(); ctx.setLineDash([5, 7]); ctx.lineDashOffset = off || 0;
+    for (var sgn = -1; sgn <= 1; sgn += 2) { var t = a + sgn * b; line(x1 + Math.cos(t) * r1, y1 + Math.sin(t) * r1, x2 + Math.cos(t) * r2, y2 + Math.sin(t) * r2, col, 1.5); }
     ctx.restore();
   }
   function dbcyl(x, y, w, h, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.fillStyle = DARK; ctx.beginPath(); ctx.ellipse(x, y - h / 2, w / 2, h * .18, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - w / 2, y - h / 2); ctx.lineTo(x - w / 2, y + h / 2); ctx.ellipse(x, y + h / 2, w / 2, h * .18, 0, Math.PI, 0, true); ctx.lineTo(x + w / 2, y - h / 2); ctx.stroke(); }
   function winframe(x, y, w, h, col, modern) { ctx.fillStyle = DARK; ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h); if (modern) { ctx.fillStyle = col; ctx.fillRect(x + 3, y + 3, w - 6, 4); ctx.fillRect(x + 3, y + 10, (w - 6) * .6, 2); } else { line(x, y + 6, x + w, y + 6, col, 1); circle(x + 4, y + 3, 1.2, col); circle(x + 9, y + 3, 1.2, col); } }
   function doc(x, y, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.fillStyle = DARK; ctx.beginPath(); ctx.moveTo(x - 7, y - 9); ctx.lineTo(x + 3, y - 9); ctx.lineTo(x + 7, y - 5); ctx.lineTo(x + 7, y + 9); ctx.lineTo(x - 7, y + 9); ctx.closePath(); ctx.fill(); ctx.stroke(); line(x - 4, y - 1, x + 4, y - 1, col, 1); line(x - 4, y + 3, x + 4, y + 3, col, 1); }
   function spark(x, y, r, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y - r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.quadraticCurveTo(x, y, x, y + r); ctx.quadraticCurveTo(x, y, x - r, y); ctx.quadraticCurveTo(x, y, x, y - r); ctx.stroke(); }
-  function roller(x, y, r, angle) { circle(x, y, r, DARK, st(.6), 1.5); ctx.save(); ctx.translate(x, y); ctx.rotate(angle); line(-r * .6, 0, r * .6, 0, st(.5), 1); line(0, -r * .6, 0, r * .6, st(.5), 1); ctx.restore(); }
+  function roller(x, y, r, angle) { gear(x, y, r, 3, angle, st(.7), 1.2); }
 
   // Particles: sparks off the bell, steam off the piston, packets on the wire
   var parts = [], rang = false, steamT = 0;
@@ -337,15 +401,17 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
     var cg2 = [W + 20, H * .16];
     gear(cg2[0], cg2[1], Math.min(170, H * .22), 18, -idle * 1.3 - torque(cg2[0], cg2[1]) * tm * 1.6, st(1), 1.5);
     ctx.restore();
+    if (!narrow) { ctx.save(); ctx.globalAlpha = .07; gear(W * .74, H * .52, Math.min(H * .42, W * .22), 3, idle * .35, st(1), 2); ctx.restore(); }
     if (!narrow) {
       ctx.save(); ctx.translate(-pdx * 8, -pdy * 6); ctx.globalAlpha = .28;
       var r1 = Math.min(110, H * .14), G1 = [W * .085, H * .66], a1 = idle + torque(G1[0], G1[1]) * tm * 1.2;
-      var r2 = r1 * .55, d12 = (r1 + r2) * .92, G2 = [G1[0] + Math.cos(-.95) * d12, G1[1] + Math.sin(-.95) * d12], a2 = -a1 * r1 / r2 + .18;
-      var r3 = r1 * .3, d23 = (r2 + r3) * .92, G3 = [G2[0] + Math.cos(.3) * d23, G2[1] + Math.sin(.3) * d23], a3 = -a2 * r2 / r3 + .4;
-      var r4 = r1 * .42, d14 = (r1 + r4) * .92, G4 = [G1[0] + Math.cos(.4) * d14, G1[1] + Math.sin(.4) * d14], a4 = -a1 * r1 / r4 + .1;
+      var r2 = r1 * .55, d12 = r1 + r2 + 26, G2 = [G1[0] + Math.cos(-.95) * d12, G1[1] + Math.sin(-.95) * d12], a2 = a1 * r1 / r2 + .18;
+      var r3 = r1 * .3, d23 = r2 + r3 + 22, G3 = [G2[0] + Math.cos(.3) * d23, G2[1] + Math.sin(.3) * d23], a3 = a2 * r2 / r3 + .4;
+      var r4 = r1 * .42, d14 = r1 + r4 + 24, G4 = [G1[0] + Math.cos(.4) * d14, G1[1] + Math.sin(.4) * d14], a4 = a1 * r1 / r4 + .1;
       // mounting plate behind the train
       ctx.strokeStyle = st(.5); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(G2[0] - 14, G2[1] - r2 - 20); ctx.lineTo(G3[0] + r3 + 22, G3[1] - 12); ctx.lineTo(G4[0] + r4 + 18, G4[1] + 14); ctx.lineTo(G4[0], G4[1] + r4 + 24); ctx.lineTo(G1[0] - r1 - 10, G1[1] + 20); ctx.stroke();
       bolt(G2[0] - 14, G2[1] - r2 - 20); bolt(G3[0] + r3 + 22, G3[1] - 12); bolt(G4[0] + r4 + 18, G4[1] + 14); bolt(G4[0], G4[1] + r4 + 24); bolt(G1[0] - r1 - 10, G1[1] + 20);
+      vbelt(G1[0], G1[1], r1, G2[0], G2[1], r2, st(.7), -a1 * r1); vbelt(G2[0], G2[1], r2, G3[0], G3[1], r3, st(.7), -a2 * r2); vbelt(G1[0], G1[1], r1, G4[0], G4[1], r4, st(.7), -a1 * r1);
       gear(G1[0], G1[1], r1, 17, a1, st(1), 1.5); gear(G2[0], G2[1], r2, 9, a2, st(1), 1.5); gear(G3[0], G3[1], r3, 5, a3, st(1), 1.5); gear(G4[0], G4[1], r4, 7, a4, st(1), 1.5);
       // vertical belt from a pulley on G2 to the top pulley
       var P1 = G2, pr1 = r2 * .3, P2 = [G2[0], H * .11], pr2 = pr1 * 1.5;
@@ -411,7 +477,7 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
 
     // 04 Pulley: the database comes down to the new stack as the counterweight rises
     var pul = [X(.955), Y(.10)], tW = ei(seg(p, .41, .48));
-    circle(pul[0], pul[1], 12, DARK, st(.7), 2); circle(pul[0], pul[1], 3, st(.7)); line(pul[0], pul[1] - 12, pul[0], Y(0), st(.4), 1.5);
+    gear(pul[0], pul[1], 12, 3, -tW * 3, st(.8), 1.2); line(pul[0], pul[1] - 12, pul[0], Y(0), st(.4), 1.5);
     var wX = X(.985), wY0 = shelfY - 8, wY1 = Y(.50) - 8, wY = wY0 + (wY1 - wY0) * tW;
     var cwX = X(.925), cwY = Y(.44) - (wY - wY0);
     line(wX, wY - 7, wX, pul[1], st(.45), 1); line(cwX, cwY - 6, cwX, pul[1], st(.45), 1);
@@ -456,14 +522,15 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
 
     // 09 Workflow: gear train, keeps turning once engaged; cursor adds torque
     var tG = seg(p, .80, .95), rot = eo(tG) * Math.PI * 1.8 + (tG >= 1 ? tm * .9 : 0), lit9 = tCur >= 1;
-    var g1 = [X(.585), Y(.84), sy * .07], g2 = [g1[0] + sy * .07 + sy * .045 - 2, Y(.84), sy * .045], g3 = [g2[0] + sy * .045 + sy * .085 - 2, Y(.82), sy * .085];
+    var g1 = [X(.585), Y(.84), sy * .07], g2 = [g1[0] + sy * .07 + sy * .045 + 14, Y(.84), sy * .045], g3 = [g2[0] + sy * .045 + sy * .085 + 16, Y(.82), sy * .085];
     rot += torque(g2[0], g2[1]) * tm * 2;
     var col9 = lit9 ? st(.95) : st(.4);
-    gear(g1[0], g1[1], g1[2], 10, rot, col9); gear(g2[0], g2[1], g2[2], 7, -rot * (g1[2] / g2[2]) + .3, col9); gear(g3[0], g3[1], g3[2], 12, rot * (g1[2] / g3[2]) * -1 + .1, col9);
+    vbelt(g1[0], g1[1], g1[2], g2[0], g2[1], g2[2], col9, -rot * g1[2]); vbelt(g2[0], g2[1], g2[2], g3[0], g3[1], g3[2], col9, -rot * g1[2]);
+    gear(g1[0], g1[1], g1[2], 10, rot, col9); gear(g2[0], g2[1], g2[2], 7, rot * (g1[2] / g2[2]) + .3, col9); gear(g3[0], g3[1], g3[2], 12, rot * (g1[2] / g3[2]) + .1, col9);
     label(g1[0] - g1[2], g1[1] + g1[2] + 16, '09 WORKFLOW', 9); box(9, g1[0] - g1[2] - 6, g3[1] - g3[2] - 6, g3[0] + g3[2] - g1[0] + g1[2] + 12, g3[2] * 2 + 12);
 
     // 10 Deploy: crank and piston; steam when it fires
-    var crankA = rot * (g1[2] / g3[2]) * -1 + .1, pin = [g3[0] + Math.cos(crankA) * g3[2] * .62, g3[1] + Math.sin(crankA) * g3[2] * .62];
+    var crankA = rot * (g1[2] / g3[2]) + .1, pin = [g3[0] + Math.cos(crankA) * g3[2] * .62, g3[1] + Math.sin(crankA) * g3[2] * .62];
     var cylY = Y(.62), cylX0 = X(.80), cylX1 = X(.985), pistonX = Math.min(cylX1 - 22, Math.max(cylX0 + 8, pin[0] + 10));
     ctx.strokeStyle = st(.55); ctx.lineWidth = 1.5; ctx.strokeRect(cylX0, cylY - 10, cylX1 - cylX0, 20); bolt(cylX0 + 6, cylY - 16); bolt(cylX1 - 6, cylY - 16);
     ctx.fillStyle = st(.85); ctx.fillRect(pistonX, cylY - 8, 14, 16);
