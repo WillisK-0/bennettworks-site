@@ -101,6 +101,10 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
 .cta { margin-top: 48px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
 .cta .fine { color: var(--faint); font-size: .9rem; }
 @media (max-width: 880px) { .how { grid-template-columns: 1fr; } }
+body.embed .nav, body.embed .head, body.embed .how, body.embed .cta, body.embed footer { display: none; }
+body.embed { background: transparent; }
+body.embed main { padding: 0; }
+body.embed .win { margin: 0; box-shadow: none; }
 </style>
 </head>
 <body>
@@ -181,6 +185,7 @@ pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.0
 </footer>
 
 <script>
+if (new URLSearchParams(location.search).has("embed")) document.body.classList.add("embed");
 (async () => {
   const $ = (id) => document.getElementById(id);
   const PANELS = ["table", "docs", "approvals", "ticket"];
