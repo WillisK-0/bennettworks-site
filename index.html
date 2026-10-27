@@ -2,154 +2,536 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Bennett Works · Claude Code enablement for engineering teams</title>
-<meta name="description" content="Setup audits, team enablement, and custom MCP connectors for engineering teams using Claude Code. Senior full-stack engineer, US Central.">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Bennett Works builds AI into the software your company already runs: custom AI connectors and features, new web applications, and legacy modernization. Houston, remote.">
+<meta name="theme-color" content="#0B0D12">
+<meta property="og:title" content="Bennett Works">
+<meta property="og:description" content="AI connectors and features for the systems you already have, new web applications, and legacy software rebuilt on a modern stack.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://bennettworks.io/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32' fill='none' stroke='%23C9CED6' stroke-width='2'%3E%3Crect width='32' height='32' rx='7' fill='%230B0D12' stroke='none'/%3E%3Cpath d='M16 4l2 3 3.5-.8 1 3.4 3.4 1-.8 3.5 3 2-3 2 .8 3.5-3.4 1-1 3.4-3.5-.8-2 3-2-3-3.5.8-1-3.4-3.4-1 .8-3.5-3-2 3-2-.8-3.5 3.4-1 1-3.4 3.5.8z'/%3E%3Ccircle cx='16' cy='16' r='4.5' stroke='%23E0374A'/%3E%3C/svg%3E">
+<link rel="canonical" href="https://bennettworks.io/">
+<title>Bennett Works</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-  :root {
-    --bg: #f3f5f7;
-    --sheet: #ffffff;
-    --ink: #16202a;
-    --muted: #5b6774;
-    --line: #d9e0e6;
-    --gutter: #a9b4be;
-    --accent: #0f6e68;
-    --accent-soft: #e4f1ef;
-    --sans: "IBM Plex Sans", system-ui, sans-serif;
-    --mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
-  }
-  * { box-sizing: border-box; }
-  html { background: var(--bg); }
-  body { margin: 0; color: var(--ink); font-family: var(--sans); font-size: 17px; line-height: 1.55; }
-  a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 3px; }
-  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+/* Layout: dark single-theme by choice. A fixed canvas draws a scroll-scrubbed Rube Goldberg machine in steel line-art behind the page; content sits left, machine right. Graphite ground, steel lines, one red indicator color. Plus Jakarta Sans, Plex Mono for engineering labels. */
+:root {
+  --bg: #0B0D12;
+  --bg-2: #11141B;
+  --fg: #ECEEF2;
+  --muted: #A4ABB7;
+  --faint: #6C7482;
+  --steel: #C9CED6;
+  --line: rgba(201,206,214,.14);
+  --glass: rgba(14,17,24,.72);
+  --glass-hover: rgba(201,206,214,.08);
+  --signal: #E0374A;
+  --signal-hover: #F04A5C;
+  --signal-glow: rgba(224,55,74,.32);
+  --display: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+  --body: 'Plus Jakarta Sans', 'Helvetica Neue', Arial, sans-serif;
+  --mono: 'IBM Plex Mono', 'SF Mono', Menlo, monospace;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: radial-gradient(1100px 650px at 85% -5%, #1C2029 0%, transparent 60%), radial-gradient(900px 600px at -5% 100%, #171A22 0%, transparent 60%), var(--bg); background-attachment: fixed; color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+a { color: inherit; text-decoration: none; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
+.container { max-width: 1120px; margin: 0 auto; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+h1, h2, h3 { margin: 0; font-family: var(--display); text-wrap: balance; }
+h1 { font-size: clamp(2.6rem, 6.2vw, 5rem); font-weight: 700; line-height: 1.04; letter-spacing: -0.03em; }
+h2 { font-size: clamp(1.8rem, 3.4vw, 2.6rem); font-weight: 700; line-height: 1.08; letter-spacing: -0.02em; }
+h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; }
+p { margin: 0; }
 
-  header.top { display: flex; justify-content: space-between; align-items: baseline; padding: 28px 0 0; font-family: var(--mono); font-size: 14px; }
-  header.top .name { font-weight: 500; }
-  header.top a { color: var(--muted); text-decoration: none; }
-  header.top a:hover { color: var(--accent); }
+.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1rem; padding: 16px 28px; border-radius: 999px; background: var(--signal); color: #fff; transition: transform .2s ease, box-shadow .3s ease, background .2s; }
+.btn:hover { background: var(--signal-hover); transform: translateY(-1px); box-shadow: 0 12px 40px -8px var(--signal-glow), 0 0 0 6px rgba(224,55,74,.12); }
+.btn-line { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; padding: 16px 22px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); transition: border-color .2s, background .2s; }
+.btn-line:hover { border-color: rgba(201,206,214,.4); background: var(--glass); }
 
-  .hero { padding: 72px 0 40px; }
-  h1 { font-size: clamp(30px, 5vw, 42px); line-height: 1.15; font-weight: 600; letter-spacing: -0.01em; margin: 0 0 18px; max-width: 18ch; }
-  .lede { font-size: 19px; color: var(--muted); max-width: 52ch; margin: 0 0 28px; }
-  .cta { display: inline-block; background: var(--accent); color: #fff; text-decoration: none; font-weight: 500; padding: 12px 20px; border-radius: 6px; }
-  .cta:hover { background: #0b5853; }
-  .cta-note { display: inline-block; margin-left: 14px; color: var(--muted); font-size: 15px; }
+.nav { position: absolute; inset: env(safe-area-inset-top, 0px) 0 auto; z-index: 5; }
+.nav .container { display: flex; align-items: center; justify-content: space-between; height: 76px; }
+.brand { font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 12px; }
+.brand svg { width: 30px; height: 30px; }
+.nav a.go { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); }
+.nav a.go:hover { color: var(--fg); border-color: rgba(201,206,214,.4); }
+.nav .right { display: inline-flex; align-items: center; gap: 18px; }
+.gauge { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; color: var(--faint); }
+.gauge svg { width: 34px; height: 34px; }
+.gauge #needle { transform-origin: 17px 19px; transition: transform .25s cubic-bezier(.2,.9,.3,1.2); }
+.gauge #stage { min-width: 11ch; }
+.brand svg { transition: transform .15s linear; }
+.btn.lit { animation: lit 1.4s ease-in-out infinite; }
+@keyframes lit { 0%, 100% { box-shadow: 0 0 0 0 rgba(224,55,74,.0), 0 12px 40px -8px var(--signal-glow); } 50% { box-shadow: 0 0 0 10px rgba(224,55,74,.18), 0 12px 48px -6px var(--signal-glow); } }
+@media (prefers-reduced-motion: reduce) { .btn.lit { animation: none; } }
+@media (max-width: 880px) { .gauge { display: none; } }
+.panel { cursor: default; }
+.panel .link { margin-top: 14px; font-family: var(--mono); font-size: .72rem; letter-spacing: .06em; color: var(--faint); display: flex; align-items: center; gap: 8px; }
+.panel .link::before { content: ""; width: 14px; height: 1px; background: var(--faint); }
+.panel:hover .link { color: var(--signal); } .panel:hover .link::before { background: var(--signal); }
+.proof .item { transition: border-color .2s; } .proof .item:hover { border-color: var(--signal); }
 
-  /* The file: a rendered CLAUDE.md with line numbers and margin notes */
-  .file { margin: 24px 0 0; background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
-  .file-bar { font-family: var(--mono); font-size: 13px; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; }
-  .file-body { display: grid; grid-template-columns: 1fr; }
-  .line { display: grid; grid-template-columns: 40px 1fr; font-family: var(--mono); font-size: 13.5px; line-height: 1.7; }
-  .line .n { color: var(--gutter); text-align: right; padding-right: 14px; user-select: none; }
-  .line .c { padding-right: 16px; white-space: pre-wrap; }
-  .line.h .c { font-weight: 500; }
-  .line.note { grid-template-columns: 40px 1fr; background: var(--accent-soft); }
-  .line.note .c { font-family: var(--sans); font-size: 14px; color: var(--ink); padding: 6px 16px 6px 0; line-height: 1.5; }
-  .line.note .n { color: var(--accent); }
-  .file-body .line:first-child { padding-top: 10px; }
-  .file-body .line:last-child { padding-bottom: 10px; }
+#net { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+.nav, .hero, .services, .proof, .contact, footer { position: relative; z-index: 1; }
 
-  section { padding: 48px 0 0; }
-  h2 { font-size: 22px; font-weight: 600; margin: 0 0 16px; letter-spacing: -0.005em; }
-  p { margin: 0 0 14px; max-width: 64ch; }
+.hero { position: relative; min-height: 92vh; display: grid; align-items: center; }
+.hero .container { padding-block: 120px 80px; }
+.hero .tag { display: inline-flex; align-items: center; gap: 10px; font-family: var(--mono); font-size: .8rem; letter-spacing: .06em; color: var(--muted); }
+.hero .tag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 14px 3px var(--signal-glow); }
+.hero h1 { max-width: 14ch; }
+.hero .lede { margin-top: 28px; font-size: 1.25rem; color: var(--muted); max-width: 34rem; line-height: 1.55; }
+.hero .actions { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 40px; }
+.hero .note { margin-top: 18px; font-size: .95rem; color: var(--faint); }
 
-  .offers { border-top: 1px solid var(--line); }
-  .offer { display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; padding: 20px 0; border-bottom: 1px solid var(--line); }
-  .offer h3 { margin: 0; font-size: 18px; font-weight: 600; }
-  .offer .price { font-family: var(--mono); font-size: 15px; color: var(--ink); white-space: nowrap; }
-  .offer p { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: 16px; }
+.services { padding-block: 24px 96px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.panel { position: relative; background: var(--glass); border: 1px solid var(--line); border-radius: 14px; padding: 30px 28px 32px; min-width: 0; backdrop-filter: blur(8px); transition: background .25s, transform .25s; overflow: hidden; }
+.panel::before { content: ""; position: absolute; inset: -1px; border-radius: inherit; padding: 1px; background: linear-gradient(135deg, rgba(201,206,214,.55), transparent 40%, transparent 60%, rgba(201,206,214,.3)); -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0); -webkit-mask-composite: xor; mask-composite: exclude; opacity: 0; transition: opacity .3s; pointer-events: none; }
+.panel:hover { background: var(--glass-hover); transform: translateY(-4px); }
+.panel:hover::before { opacity: 1; }
+.panel .rivets { position: absolute; inset: 10px; pointer-events: none; }
+.panel .rivets i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(236,238,242,.95), rgba(201,206,214,.25) 70%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.5); }
+.panel .rivets i:nth-child(1) { left: 0; top: 0; } .panel .rivets i:nth-child(2) { right: 0; top: 0; } .panel .rivets i:nth-child(3) { left: 0; bottom: 0; } .panel .rivets i:nth-child(4) { right: 0; bottom: 0; }
+.panel .no { font-family: var(--mono); font-size: .75rem; color: var(--faint); letter-spacing: .08em; margin-bottom: 18px; }
+.panel h3 { margin-bottom: 10px; }
+.panel p { color: var(--muted); font-size: .98rem; }
 
-  .proof { background: var(--sheet); border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
-  .proof p { margin: 0 0 10px; }
-  .proof .meta { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.proof { padding-block: 96px; border-top: 1px solid var(--line); }
+.proof .top { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 56px; align-items: start; }
+.proof h2 { max-width: 14ch; }
+.proof .sub { margin-top: 16px; color: var(--muted); max-width: 26rem; }
+.sheet { background: rgba(11,13,18,.82); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; }
+.caps { list-style: none; margin: 0; padding: 28px 30px; display: grid; grid-template-columns: 1fr 1fr; gap: 16px 28px; }
+.caps li { position: relative; padding-left: 26px; color: var(--fg); font-size: 1rem; line-height: 1.45; }
+.caps li::before { content: ""; position: absolute; left: 0; top: .5em; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--steel); background: radial-gradient(circle, var(--steel) 0 2px, transparent 2.5px); opacity: .7; }
+.spot { margin-top: 40px; position: relative; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 40px; align-items: center; padding: 34px 36px; border: 1px solid var(--line); border-radius: 14px; background: rgba(11,13,18,.82); backdrop-filter: blur(12px); overflow: hidden; }
+.spot .no { font-family: var(--mono); font-size: .75rem; letter-spacing: .08em; color: var(--signal); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+.spot .no::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 12px 2px var(--signal-glow); }
+.spot h3 { font-size: 1.6rem; letter-spacing: -0.02em; }
+.spot h3 a { text-decoration: none; }
+.spot h3 a:hover { text-decoration: underline; text-decoration-color: var(--signal); text-underline-offset: 5px; }
+.spot p { margin-top: 12px; color: var(--muted); max-width: 46rem; }
+.spot .how { margin-top: 16px; display: flex; flex-wrap: wrap; gap: 8px; }
+.spot .how span { font-family: var(--mono); font-size: .72rem; letter-spacing: .04em; color: var(--muted); padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; }
+.spot .rivets { position: absolute; inset: 10px; pointer-events: none; }
+.spot .rivets i { position: absolute; width: 6px; height: 6px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(236,238,242,.95), rgba(201,206,214,.25) 70%); box-shadow: inset 0 0 0 1px rgba(0,0,0,.5); }
+.spot .rivets i:nth-child(1) { left: 0; top: 0; } .spot .rivets i:nth-child(2) { right: 0; top: 0; } .spot .rivets i:nth-child(3) { left: 0; bottom: 0; } .spot .rivets i:nth-child(4) { right: 0; bottom: 0; }
 
-  footer { padding: 56px 0 48px; color: var(--muted); font-size: 15px; }
-  footer a { color: var(--accent); }
+.contact { padding-block: 96px 112px; border-top: 1px solid var(--line); text-align: center; position: relative; overflow: hidden; }
+.contact .inner { position: relative; padding: 56px 32px 48px; max-width: 760px; margin: 0 auto; }
+.contact h2 { max-width: 20ch; margin: 0 auto; }
+.contact p { margin: 18px auto 0; max-width: 34rem; color: var(--muted); font-size: 1.1rem; }
+.contact .actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 14px; margin-top: 36px; }
+.contact .addr { margin-top: 26px; display: inline-flex; align-items: center; gap: 12px; flex-wrap: wrap; justify-content: center; font-family: var(--mono); font-size: .9rem; color: var(--muted); }
+.contact .addr button { font: inherit; font-family: var(--body); font-size: .8rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: transparent; color: var(--fg); cursor: pointer; }
 
-  @media (max-width: 600px) {
-    body { font-size: 16px; }
-    .hero { padding: 48px 0 28px; }
-    .cta-note { display: block; margin: 12px 0 0; }
-    .line { grid-template-columns: 32px 1fr; font-size: 12.5px; }
-    .offer { grid-template-columns: 1fr; }
-  }
-  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--faint); font-size: .9rem; }
+footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+@media (max-width: 880px) {
+  .hero { min-height: auto; }
+  .hero .container { padding-block: 120px 56px; }
+  .grid3 { grid-template-columns: 1fr; }
+  .proof .top { grid-template-columns: 1fr; gap: 28px; }
+  .caps { grid-template-columns: 1fr; }
+  .spot { grid-template-columns: 1fr; gap: 24px; padding: 28px 24px; }
+  .proof, .contact { padding-block: 64px; }
+  .caps { padding: 22px 20px; }
+  .contact .inner { padding: 36px 20px; }
+}
+@media (prefers-reduced-motion: reduce) { .btn, .panel { transition: none; } .btn:hover, .panel:hover { transform: none; } }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <header class="top">
-    <span class="name">Bennett Works</span>
-    <nav><a href="#offers">Offers</a> &nbsp;·&nbsp; <a href="#proof">Proof</a> &nbsp;·&nbsp; <a href="#contact">Contact</a></nav>
-  </header>
+<div class="nav">
+  <div class="container">
+    <a class="brand" href="#top" aria-label="Bennett Works">
+      <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="#C9CED6" stroke-width="2"><path d="M16 4l2 3 3.5-.8 1 3.4 3.4 1-.8 3.5 3 2-3 2 .8 3.5-3.4 1-1 3.4-3.5-.8-2 3-2-3-3.5.8-1-3.4-3.4-1 .8-3.5-3-2 3-2-.8-3.5 3.4-1 1-3.4 3.5.8z"/><circle cx="16" cy="16" r="4.5" stroke="#E0374A"/></svg>
+      Bennett Works
+    </a>
+    <span class="right">
+      <a class="go" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
+    </span>
+  </div>
+</div>
 
-  <div class="hero">
-    <h1>Your team bought Claude Code. Now make it stick.</h1>
-    <p class="lede">Seats without conventions give you ten developers using the tool ten different ways. I set up the conventions, skills, and connectors that make the whole team faster, in your repo, in days.</p>
-    <a class="cta" href="#contact">Book 20 minutes</a>
-    <span class="cta-note">Evenings US Central. No deck, I look at your repo.</span>
+<canvas id="net" aria-hidden="true"></canvas>
 
-    <div class="file" aria-label="Example CLAUDE.md with notes">
-      <div class="file-bar"><span>CLAUDE.md</span><span>what I leave behind</span></div>
-      <div class="file-body">
-        <div class="line h"><span class="n">1</span><span class="c"># Acme API</span></div>
-        <div class="line"><span class="n">2</span><span class="c">.NET 10 + React 19. Run tests with `dotnet test` before any commit.</span></div>
-        <div class="line note"><span class="n">↳</span><span class="c">One file every developer's Claude reads first. Stack, commands, the three rules people keep forgetting. Most teams have none, or one nobody maintains.</span></div>
-        <div class="line h"><span class="n">3</span><span class="c">## Conventions</span></div>
-        <div class="line"><span class="n">4</span><span class="c">- Handlers return Result&lt;T&gt;, never throw across the API boundary.</span></div>
-        <div class="line"><span class="n">5</span><span class="c">- New endpoints need an OData query test. See /docs/testing.md.</span></div>
-        <div class="line note"><span class="n">↳</span><span class="c">Conventions written for a model, not a human: short, checkable, with a pointer to the example. This is where the "it wrote it wrong again" complaints go away.</span></div>
-        <div class="line h"><span class="n">6</span><span class="c">## Skills</span></div>
-        <div class="line"><span class="n">7</span><span class="c">/new-endpoint, /migrate-screen, /review-pr. Use them; don't freelance.</span></div>
-        <div class="line note"><span class="n">↳</span><span class="c">Repeatable work becomes a skill: a checklist Claude runs the same way every time. Your senior engineers' judgement, packaged so the rest of the team gets it.</span></div>
-        <div class="line h"><span class="n">8</span><span class="c">## Connectors</span></div>
-        <div class="line"><span class="n">9</span><span class="c">`ops-db` answers questions about customers and tickets. `tickets` reads Jira.</span></div>
-        <div class="line note"><span class="n">↳</span><span class="c">Custom MCP connectors. Claude answers "how many customers hit this bug" from your real database instead of a developer doing it by hand.</span></div>
-      </div>
+<header class="hero" id="top">
+  <div class="container">
+    <h1>We build AI into the software your company already runs.</h1>
+    <p class="lede">Three things: AI connectors and features for the systems you already have, new web applications, and rebuilding legacy software on a modern stack. Built in your codebase, on your infrastructure.</p>
+    <div class="actions">
+      <a class="btn" id="book" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
+      <a class="btn-line" href="#services">What we build</a>
+    </div>
+    <p class="note">30 minutes on the calendar. We'll tell you if it's a fit and what it would take.</p>
+  </div>
+</header>
+
+<section class="services" id="services">
+  <div class="container">
+    <div class="grid3">
+      <article class="panel" data-stages="7,8,12">
+        <div class="rivets" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="no">01 / CONNECTORS</div>
+        <h3>Custom AI connectors and features</h3>
+        <p>Connect Claude or ChatGPT to your database, documents, and ticketing system so your team can ask questions and get answers with sources. Or put an assistant inside your own product. Read-only by default, and every query is logged.</p>
+        <div class="link">STAGES 07, 08, 12 ON THE DRAWING</div>
+      </article>
+      <article class="panel" data-stages="9,10,11">
+        <div class="rivets" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="no">02 / WEB</div>
+        <h3>Custom web applications</h3>
+        <p>Internal tools and customer-facing apps, built in React and .NET from your spec. Tested, documented, and handed over as code your team owns.</p>
+        <div class="link">STAGES 09, 10, 11 ON THE DRAWING</div>
+      </article>
+      <article class="panel" data-stages="3,4,5">
+        <div class="rivets" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+        <div class="no">03 / MODERNIZATION</div>
+        <h3>Legacy modernization</h3>
+        <p>Old desktop and web apps rebuilt on a modern stack one screen at a time, so nothing stops working during the move. If the original developers are gone and there's no documentation, we start by recovering how it works. Every rebuilt screen is checked against your real data before it goes live.</p>
+        <div class="link">STAGES 03, 04, 05 ON THE DRAWING</div>
+      </article>
     </div>
   </div>
+</section>
 
-  <section id="offers">
-    <h2>Three ways to work together</h2>
-    <div class="offers">
-      <div class="offer">
-        <h3>Setup audit</h3>
-        <span class="price">$1,500, fixed</span>
-        <p>Two hours in your repo with you or your lead. You get a working CLAUDE.md, permission and hook config, two starter skills, and a written plan committed to a branch. Most teams stop here and are fine.</p>
+<section class="proof">
+  <div class="container">
+    <div class="top">
+      <div>
+        <h2>A few things we build.</h2>
+        <p class="sub">Not on the list? Ask. If it's a bad idea, we'll tell you on the first call.</p>
       </div>
-      <div class="offer">
-        <h3>Team enablement</h3>
-        <span class="price">$5,000 to $8,000</span>
-        <p>The audit, plus a half-day working session with the team, plus two weeks of async support while the conventions bed in. For teams of five to twenty-five who want everyone shipping the same way.</p>
-      </div>
-      <div class="offer">
-        <h3>Custom connector</h3>
-        <span class="price">$5,000 to $15,000</span>
-        <p>An MCP connector over your database, ticketing, docs, or internal API, built fresh on your infrastructure. Read-only by default, every query visible, maintenance optional.</p>
-      </div>
+      <ul class="caps sheet">
+        <li>A Claude connector over your database, docs, and ticketing system, with every answer cited</li>
+        <li>An assistant inside your product that answers from each customer's own data</li>
+        <li>Agents that triage support tickets, draft the reply, and file the bug</li>
+        <li>Workflows that move records between systems you can't replace yet</li>
+        <li>An internal tool to replace the spreadsheet your team runs on</li>
+        <li>A legacy desktop or web app moved to React and .NET, screen by screen</li>
+        <li>Recovering and documenting a system nobody on the team understands anymore</li>
+        <li>Test harnesses that catch the AI being wrong before your customers do</li>
+      </ul>
     </div>
-  </section>
-
-  <section id="proof">
-    <h2>See the work</h2>
-    <div class="proof">
-      <p><a href="https://github.com/WillisK-0/ask-your-data">ask-your-data</a>: an MCP connector and chat UI that let Claude answer questions from a live database and a folder of policy docs. Tools defined once, served to both Claude Desktop and a web app. Read-only, no native dependencies, every SQL query shown to the user.</p>
-      <p class="meta">TypeScript · MCP SDK · Anthropic SDK · node:sqlite · React</p>
+    <div class="spot" data-stages="8,9">
+      <div class="rivets" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+      <div>
+        <div class="no">OUR PASSION PROJECT</div>
+        <h3><a href="https://ag-llama.com">AG-Llama</a></h3>
+        <p>A project management tool that AI coding agents can use directly. Connect Claude Code, Codex, or Cursor and the agent picks up the next issue, updates it as it works, and reports back on the same board your team reads. Shared skills and prompts keep every agent working the same way. We built it because tools like Jira were made for clicking, not for agents.</p>
+        <div class="how"><span>MCP native</span><span>Sprints and boards</span><span>Shared skills and prompts</span><span>Claude Code · Codex · Cursor</span><span>Azure DevOps sync</span></div>
+      </div>
+      <a class="btn-line" href="https://ag-llama.com">See it at ag-llama.com</a>
     </div>
-  </section>
+  </div>
+</section>
 
-  <section id="about">
-    <h2>Who you'd be working with</h2>
-    <p>Bennett Works is Keith Willis, senior full-stack engineer. I ship production software with Claude Code every day: .NET and React, large existing codebases, the unglamorous work of making a tool fit a team that already has habits. I'm not a prompt consultant. I write the code, set up the config, and leave when it works.</p>
-  </section>
+<section class="contact" id="contact">
+  <div class="container">
+   <div class="inner sheet">
+    <h2>Tell us what your team is stuck on.</h2>
+    <p>Pick a time on the calendar. 30 minutes, no prep needed. You'll get an invite with a Meet link, and we'll come having read what you sent.</p>
+    <div class="actions">
+      <a class="btn" id="book2" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
+    </div>
+   </div>
+  </div>
+</section>
 
-  <footer id="contact">
-    Email <a href="mailto:keith.willis@bennettworks.io">keith.willis@bennettworks.io</a> with one line about your stack and team size. I reply within a day with two evening slots.
-  </footer>
-</div>
+<footer>
+  <div class="container"><span>© 2026 Bennett Works</span><span>Houston · Remote</span></div>
+</footer>
+
+<script>
+(function () {
+  var BOOKING_URL = "https://calendar.app.google/WHUbhDQrg89AKPxZ9";
+  if (BOOKING_URL) ['book', 'book2'].forEach(function (id) { var a = document.getElementById(id); a.href = BOOKING_URL; a.target = "_blank"; a.rel = "noopener"; });
+
+  // ---- The machine. Scroll progress p (0..1) scrubs it; a clock keeps it alive; the cursor adds torque.
+  var c = document.getElementById('net'), ctx = c.getContext('2d');
+  var W, H, dpr = Math.min(window.devicePixelRatio || 1, 2), scrollY = window.scrollY || 0, narrow = false;
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var mx = -9999, my = -9999, mxs = 0, mys = 0, focus = {}, anyFocus = false, tm = 0, lastP = 0;
+  var STEEL = '201,206,214', RED = '224,55,74', INKC = '236,238,242';
+  function st(a) { return 'rgba(' + STEEL + ',' + a + ')'; }
+  function red(a) { return 'rgba(' + RED + ',' + a + ')'; }
+  function ink(a) { return 'rgba(' + INKC + ',' + a + ')'; }
+  var DARK = 'rgba(11,13,18,1)';
+  var NAMES = ['REQUEST','INTAKE','CUTOVER','DATA MIGRATION','HANDOFF','IN FLIGHT','MCP CONNECTOR','AGENTS','WORKFLOW','DEPLOY','SHIPPED','ANSWER'];
+  var STARTS = [0, .13, .26, .41, .48, .56, .68, .73, .80, .86, .90, .97];
+  var needle = document.getElementById('needle'), stageEl = document.getElementById('stage'), brandGear = document.querySelector('.brand svg'), book2 = document.getElementById('book2');
+  var intro = reduce ? 1 : 0, scrolled = false, lastGearDeg = -1, litState = false;
+  function resize() { W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); narrow = W < 880; }
+  function progress() { var max = document.documentElement.scrollHeight - window.innerHeight; return max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0; }
+  function seg(p, a, b) { return Math.min(1, Math.max(0, (p - a) / (b - a))); }
+  function eo(t) { return 1 - Math.pow(1 - t, 3); }
+  function ei(t) { return t * t * t; }
+  function line(x1, y1, x2, y2, col, w) { ctx.strokeStyle = col; ctx.lineWidth = w || 1.5; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); }
+  function circle(x, y, r, fill, stroke, w) { ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); if (fill) { ctx.fillStyle = fill; ctx.fill(); } if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = w || 1.5; ctx.stroke(); } }
+  function label(x, y, text, n) { var f = n && focus[n]; ctx.font = (f ? '500 11px' : '500 10px') + ' "IBM Plex Mono", monospace'; ctx.fillStyle = f ? red(.95) : st(anyFocus ? .3 : .45); ctx.fillText(text, x, y); }
+  function bolt(x, y) { circle(x, y, 3, DARK, st(.6), 1); line(x - 1.6, y - 1.6, x + 1.6, y + 1.6, st(.6), 1); line(x - 1.6, y + 1.6, x + 1.6, y - 1.6, st(.6), 1); }
+  function box(n, x, y, w, h) { if (!focus[n]) return; ctx.save(); ctx.setLineDash([5, 5]); ctx.lineDashOffset = -tm * 30; ctx.strokeStyle = red(.8); ctx.lineWidth = 1; ctx.strokeRect(x, y, w, h); ctx.setLineDash([]); ctx.fillStyle = red(.05); ctx.fillRect(x, y, w, h); ctx.restore(); }
+  function torque(x, y) { var d = Math.hypot(mxs - x, mys - y); return d < 260 ? (1 - d / 260) : 0; }
+  function gear(x, y, r, teeth, angle, col, w) {
+    ctx.save(); ctx.translate(x, y); ctx.rotate(angle);
+    ctx.strokeStyle = col; ctx.lineWidth = w || 1.5; ctx.fillStyle = DARK; ctx.beginPath();
+    for (var i = 0; i < teeth * 2; i++) { var a0 = (i / (teeth * 2)) * Math.PI * 2, rr = (i % 2 === 0) ? r : r * .84; var px = Math.cos(a0) * rr, py = Math.sin(a0) * rr; if (i === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py); }
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    circle(0, 0, r * .4, null, col); circle(0, 0, 3.5, col);
+    for (var k = 0; k < 5; k++) { var a1 = k * Math.PI * 2 / 5; line(Math.cos(a1) * r * .4, Math.sin(a1) * r * .4, Math.cos(a1) * r * .74, Math.sin(a1) * r * .74, col, 1.2); }
+    ctx.restore();
+  }
+  function dbcyl(x, y, w, h, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.fillStyle = DARK; ctx.beginPath(); ctx.ellipse(x, y - h / 2, w / 2, h * .18, 0, 0, Math.PI * 2); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x - w / 2, y - h / 2); ctx.lineTo(x - w / 2, y + h / 2); ctx.ellipse(x, y + h / 2, w / 2, h * .18, 0, Math.PI, 0, true); ctx.lineTo(x + w / 2, y - h / 2); ctx.stroke(); }
+  function winframe(x, y, w, h, col, modern) { ctx.fillStyle = DARK; ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.fillRect(x, y, w, h); ctx.strokeRect(x, y, w, h); if (modern) { ctx.fillStyle = col; ctx.fillRect(x + 3, y + 3, w - 6, 4); ctx.fillRect(x + 3, y + 10, (w - 6) * .6, 2); } else { line(x, y + 6, x + w, y + 6, col, 1); circle(x + 4, y + 3, 1.2, col); circle(x + 9, y + 3, 1.2, col); } }
+  function doc(x, y, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.fillStyle = DARK; ctx.beginPath(); ctx.moveTo(x - 7, y - 9); ctx.lineTo(x + 3, y - 9); ctx.lineTo(x + 7, y - 5); ctx.lineTo(x + 7, y + 9); ctx.lineTo(x - 7, y + 9); ctx.closePath(); ctx.fill(); ctx.stroke(); line(x - 4, y - 1, x + 4, y - 1, col, 1); line(x - 4, y + 3, x + 4, y + 3, col, 1); }
+  function spark(x, y, r, col) { ctx.strokeStyle = col; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y - r); ctx.quadraticCurveTo(x, y, x + r, y); ctx.quadraticCurveTo(x, y, x, y + r); ctx.quadraticCurveTo(x, y, x - r, y); ctx.quadraticCurveTo(x, y, x, y - r); ctx.stroke(); }
+  function roller(x, y, r, angle) { circle(x, y, r, DARK, st(.6), 1.5); ctx.save(); ctx.translate(x, y); ctx.rotate(angle); line(-r * .6, 0, r * .6, 0, st(.5), 1); line(0, -r * .6, 0, r * .6, st(.5), 1); ctx.restore(); }
+
+  // Particles: sparks off the bell, steam off the piston, packets on the wire
+  var parts = [], rang = false, steamT = 0;
+  function emit(x, y, n, kind) { for (var i = 0; i < n; i++) { var a = Math.random() * Math.PI * 2, sp = kind === 'spark' ? 60 + Math.random() * 160 : 10 + Math.random() * 25; parts.push({ x: x, y: y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp - (kind === 'steam' ? 40 : 0), life: 1, kind: kind }); } }
+  function stepParts(dt) { for (var i = parts.length - 1; i >= 0; i--) { var q = parts[i]; q.x += q.vx * dt; q.y += q.vy * dt; if (q.kind === 'spark') q.vy += 260 * dt; q.life -= dt * (q.kind === 'spark' ? 1.4 : .7); if (q.life <= 0) parts.splice(i, 1); } }
+  function drawParts() { for (var i = 0; i < parts.length; i++) { var q = parts[i]; if (q.kind === 'spark') { line(q.x, q.y, q.x - q.vx * .02, q.y - q.vy * .02, red(q.life), 1.5); } else { circle(q.x, q.y, 4 + (1 - q.life) * 10, st(.08 * q.life)); } } }
+
+  function draw(dt) {
+    ctx.clearRect(0, 0, W, H);
+    var p = progress();
+    mxs += ((mx < 0 ? W / 2 : mx) - mxs) * .08; mys += ((my < 0 ? H / 2 : my) - mys) * .08;
+    var par = narrow ? 0 : 1, pdx = (mxs - W / 2) / W, pdy = (mys - H / 2) / H;
+
+    // Stage readout in the nav, the logo gear turning with scroll, the final button lit when the bell rings
+    var sIdx = 0; for (var si = 0; si < STARTS.length; si++) if (p >= STARTS[si]) sIdx = si;
+    if (needle) needle.style.transform = 'rotate(' + (-125 + 250 * p) + 'deg)';
+    if (stageEl) { var sTxt = (sIdx + 1 < 10 ? '0' : '') + (sIdx + 1) + ' ' + NAMES[sIdx]; if (p < .005 && !scrolled && tm > 3 && Math.floor(tm * 1.2) % 2) sTxt = 'SCROLL TO RUN'; if (stageEl.textContent !== sTxt) stageEl.textContent = sTxt; }
+    var gdeg = Math.round(p * 360); if (brandGear && gdeg !== lastGearDeg) { lastGearDeg = gdeg; brandGear.style.transform = 'rotate(' + gdeg + 'deg)'; }
+    var lit = p > .97; if (book2 && lit !== litState) { litState = lit; book2.classList.toggle('lit', lit); }
+    // Plotter intro: the whole drawing is revealed left to right by a pen carriage
+    if (intro < 1) intro = Math.min(1, intro + dt / 2.2);
+    var sweep = eo(intro) * (W + 60);
+    ctx.save(); if (intro < 1) { ctx.beginPath(); ctx.rect(0, 0, sweep, H); ctx.clip(); }
+
+    // Blueprint grid: drifts with scroll, leans with the cursor
+    ctx.save(); ctx.translate(-pdx * 10 * par, -pdy * 10 * par);
+    var g = 48, off = (scrollY * .25) % g;
+    ctx.lineWidth = 1; ctx.strokeStyle = ink(.035); ctx.beginPath();
+    for (var gx = -off - g; gx < W + g; gx += g) { ctx.moveTo(gx, -20); ctx.lineTo(gx, H + 20); }
+    for (var gy = -off - g; gy < H + g; gy += g) { ctx.moveTo(-20, gy); ctx.lineTo(W + 20, gy); }
+    ctx.stroke(); ctx.strokeStyle = ink(.07); ctx.beginPath();
+    for (var gx2 = -off - g; gx2 < W + g; gx2 += g * 4) { ctx.moveTo(gx2, -20); ctx.lineTo(gx2, H + 20); }
+    for (var gy2 = -off - g; gy2 < H + g; gy2 += g * 4) { ctx.moveTo(-20, gy2); ctx.lineTo(W + 20, gy2); }
+    ctx.stroke(); ctx.restore();
+
+    // Cursor lamp: a soft work light following the mouse
+    if (mx >= 0 && !narrow) { var cl = ctx.createRadialGradient(mxs, mys, 0, mxs, mys, 320); cl.addColorStop(0, ink(.045)); cl.addColorStop(1, ink(0)); ctx.fillStyle = cl; ctx.fillRect(mxs - 320, mys - 320, 640, 640); }
+
+    // Right corner gear, and on the left a clockwork train: meshing gears, belt drive, escapement, governor
+    var idle = scrollY * .004 + tm * .08;
+    ctx.save(); ctx.globalAlpha = .18;
+    var cg2 = [W + 20, H * .16];
+    gear(cg2[0], cg2[1], Math.min(170, H * .22), 18, -idle * 1.3 - torque(cg2[0], cg2[1]) * tm * 1.6, st(1), 1.5);
+    ctx.restore();
+    if (!narrow) {
+      ctx.save(); ctx.translate(-pdx * 8, -pdy * 6); ctx.globalAlpha = .28;
+      var r1 = Math.min(110, H * .14), G1 = [W * .085, H * .66], a1 = idle + torque(G1[0], G1[1]) * tm * 1.2;
+      var r2 = r1 * .55, d12 = (r1 + r2) * .92, G2 = [G1[0] + Math.cos(-.95) * d12, G1[1] + Math.sin(-.95) * d12], a2 = -a1 * r1 / r2 + .18;
+      var r3 = r1 * .3, d23 = (r2 + r3) * .92, G3 = [G2[0] + Math.cos(.3) * d23, G2[1] + Math.sin(.3) * d23], a3 = -a2 * r2 / r3 + .4;
+      var r4 = r1 * .42, d14 = (r1 + r4) * .92, G4 = [G1[0] + Math.cos(.4) * d14, G1[1] + Math.sin(.4) * d14], a4 = -a1 * r1 / r4 + .1;
+      // mounting plate behind the train
+      ctx.strokeStyle = st(.5); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(G2[0] - 14, G2[1] - r2 - 20); ctx.lineTo(G3[0] + r3 + 22, G3[1] - 12); ctx.lineTo(G4[0] + r4 + 18, G4[1] + 14); ctx.lineTo(G4[0], G4[1] + r4 + 24); ctx.lineTo(G1[0] - r1 - 10, G1[1] + 20); ctx.stroke();
+      bolt(G2[0] - 14, G2[1] - r2 - 20); bolt(G3[0] + r3 + 22, G3[1] - 12); bolt(G4[0] + r4 + 18, G4[1] + 14); bolt(G4[0], G4[1] + r4 + 24); bolt(G1[0] - r1 - 10, G1[1] + 20);
+      gear(G1[0], G1[1], r1, 17, a1, st(1), 1.5); gear(G2[0], G2[1], r2, 9, a2, st(1), 1.5); gear(G3[0], G3[1], r3, 5, a3, st(1), 1.5); gear(G4[0], G4[1], r4, 7, a4, st(1), 1.5);
+      // vertical belt from a pulley on G2 to the top pulley
+      var P1 = G2, pr1 = r2 * .3, P2 = [G2[0], H * .11], pr2 = pr1 * 1.5;
+      ctx.setLineDash([5, 7]); ctx.lineDashOffset = a2 * pr1; line(P1[0] - pr1, P1[1], P2[0] - pr2, P2[1], st(.9), 1.5); ctx.lineDashOffset = -a2 * pr1; line(P1[0] + pr1, P1[1], P2[0] + pr2, P2[1], st(.9), 1.5); ctx.setLineDash([]);
+      circle(P1[0], P1[1], pr1, DARK, st(1), 1.5); roller(P2[0], P2[1], pr2, a2 * pr1 / pr2);
+      line(P2[0] - pr2 - 6, P2[1] - pr2 - 10, P2[0] + pr2 + 6, P2[1] - pr2 - 10, st(.8), 2); bolt(P2[0] - pr2 - 6, P2[1] - pr2 - 10); bolt(P2[0] + pr2 + 6, P2[1] - pr2 - 10);
+      // escapement on a shaft to the left of the top pulley; the anchor rocks and the pendulum keeps time
+      var er = 26, ew = [P2[0] - pr2 - 64, P2[1] + 8], tick = tm * 2.2 + scrollY * .01, swing = Math.sin(tick), stepA = Math.floor(tick / Math.PI) * (Math.PI / 10) + (swing > 0 ? .06 : 0);
+      line(P2[0] - pr2, P2[1] + 8, ew[0], ew[1], st(.6), 1.5);
+      var piv = [ew[0], ew[1] - er - 18], plen = H * .3;
+      ctx.save(); ctx.translate(piv[0], piv[1]); ctx.rotate(swing * .11); line(0, 0, 0, plen, st(1), 1.5); circle(0, plen, 12, DARK, st(1), 2); circle(0, plen, 4, st(1));
+      line(-er * .95, er * .6, 0, 0, st(1), 2); line(er * .95, er * .6, 0, 0, st(1), 2); line(-er * .95, er * .6, -er * .8, er * .95, st(1), 2); line(er * .95, er * .6, er * .8, er * .95, st(1), 2); ctx.restore();
+      ctx.save(); ctx.translate(ew[0], ew[1]); ctx.rotate(stepA); ctx.strokeStyle = st(1); ctx.lineWidth = 1.5; ctx.fillStyle = DARK; ctx.beginPath();
+      for (var ti = 0; ti < 10; ti++) { var ta = ti / 10 * Math.PI * 2, tb = ta + .34; ctx.lineTo(Math.cos(ta) * er, Math.sin(ta) * er); ctx.lineTo(Math.cos(tb) * er * .76, Math.sin(tb) * er * .76); }
+      ctx.closePath(); ctx.fill(); ctx.stroke(); circle(0, 0, 3, st(1)); ctx.restore();
+      bolt(piv[0], piv[1]); line(piv[0] - 26, piv[1] - 12, piv[0] + 26, piv[1] - 12, st(.8), 2);
+      // governor on a spindle to the right of the top pulley; the balls fly out as it spins up
+      var gx = P2[0] + pr2 + 54, gy0 = P2[1], gy1 = P2[1] + H * .2, spin = a2 * 2 + torque(gx, gy1) * tm * 3, sp = .3 + .45 * Math.min(1, torque(gx, gy1) * 1.5 + Math.abs(Math.sin(tm * .4)) * .4);
+      line(P2[0] + pr2, P2[1], gx, gy0, st(.6), 1.5); line(gx, gy0, gx, gy1, st(.8), 2); bolt(gx, gy0); ctx.strokeStyle = st(.8); ctx.lineWidth = 1.5; ctx.strokeRect(gx - 10, gy1, 20, 8);
+      var al = H * .085, bx1 = gx + Math.cos(spin) * Math.sin(sp) * al, by1 = gy0 + 22 + Math.cos(sp) * al, bx2 = gx - Math.cos(spin) * Math.sin(sp) * al;
+      line(gx, gy0 + 22, bx1, by1, st(.9), 1.5); line(gx, gy0 + 22, bx2, by1, st(.9), 1.5); line(bx1, by1, gx, by1 + 28, st(.6), 1); line(bx2, by1, gx, by1 + 28, st(.6), 1);
+      circle(bx1, by1, 7, DARK, st(1), 1.5); circle(bx2, by1, 7, DARK, st(1), 1.5); ctx.strokeRect(gx - 6, by1 + 24, 12, 8);
+      ctx.restore();
+    }
+
+    ctx.save();
+    ctx.translate(-pdx * 22 * par, -pdy * 14 * par);
+    ctx.globalAlpha = anyFocus ? 1 : (narrow ? .45 : 1) * (1 - .6 * seg(p, .12, .3) + .35 * seg(p, .8, .95));
+    var X0 = narrow ? W * .06 : W * .50, X1 = narrow ? W * .94 : W * .97, Y0 = H * .09, Y1 = H * .93, sx = X1 - X0, sy = Y1 - Y0;
+    function X(u) { return X0 + u * sx; } function Y(v) { return Y0 + v * sy; }
+
+    // Frame rails with bolts
+    line(X(0), Y(0), X(0), Y(1), st(.18), 1); line(X(1), Y(0), X(1), Y(1), st(.18), 1);
+    for (var b1 = 0; b1 <= 1.001; b1 += .125) { bolt(X(0), Y(b1)); bolt(X(1), Y(b1)); }
+
+    // 01 Ramp
+    var rA = [X(.03), Y(.02)], rB = [X(.42), Y(.24)];
+    line(rA[0], rA[1], rB[0], rB[1], st(.6), 2);
+    for (var s1 = 0; s1 <= 1; s1 += .2) { var lx = rA[0] + (rB[0] - rA[0]) * s1, ly = rA[1] + (rB[1] - rA[1]) * s1; line(lx, ly, lx, ly + 12, st(.3), 1); }
+    label(rA[0], rA[1] - 8, '01 REQUEST', 1); box(1, rA[0] - 10, rA[1] - 24, rB[0] - rA[0] + 20, rB[1] - rA[1] + 40);
+
+    // 02 Conveyor: belt runs on the clock, faster while the request rides it
+    var cA = X(.42), cB = X(.70), cy = Y(.27), rr = sy * .022;
+    var tC = seg(p, .13, .24), belt = p * 400 + tm * 40 + (tC > 0 && tC < 1 ? tm * 120 : 0), rollA = belt / rr;
+    line(cA, cy - rr, cB, cy - rr, st(.55), 2); line(cA, cy + rr, cB, cy + rr, st(.55), 2);
+    roller(cA, cy, rr, rollA); roller(cB, cy, rr, rollA); roller((cA + cB) / 2, cy, rr * .7, rollA * 1.4);
+    ctx.setLineDash([6, 8]); ctx.lineDashOffset = -belt; line(cA + rr, cy - rr, cB - rr, cy - rr, st(.9), 1); ctx.setLineDash([]);
+    label(cA, cy + rr + 16, '02 INTAKE', 2); box(2, cA - rr - 4, cy - rr - 6, cB - cA + rr * 2 + 8, rr * 2 + 12);
+
+    // Shelf + 03 legacy screens tipping into modern ones
+    var shelfY = Y(.27) - rr; line(cB, shelfY, X(.985), shelfY, st(.6), 2);
+    var bx, by, tR = ei(seg(p, 0, .13));
+    if (p < .13) { bx = rA[0] + (rB[0] - rA[0]) * tR; by = rA[1] + (rB[1] - rA[1]) * tR - 10; }
+    else if (p < .24) { bx = cA + (cB - cA) * tC; by = cy - rr - 10; }
+    else { bx = cB + (X(.735) - cB) * seg(p, .24, .27); by = shelfY - 10; }
+    ctx.save(); ctx.translate(bx, by); ctx.rotate(p < .13 ? .5 : 0); doc(0, 0, st(.95)); ctx.restore();
+    var nD = 6;
+    for (var i = 0; i < nD; i++) {
+      var dx = X(.75 + i * .043), t = seg(p, .26 + i * .024, .34 + i * .024), ang = eo(t) * 1.25;
+      ctx.save(); ctx.translate(dx, shelfY); ctx.rotate(ang); winframe(-7, -sy * .1, 14, sy * .1, t > .6 ? st(.95) : st(.55), t > .6); ctx.restore();
+    }
+    label(X(.74), shelfY - sy * .1 - 8, '03 CUTOVER', 3); box(3, X(.73), shelfY - sy * .1 - 22, X(.985) - X(.73), sy * .1 + 28);
+
+    // 04 Pulley: the database comes down to the new stack as the counterweight rises
+    var pul = [X(.955), Y(.10)], tW = ei(seg(p, .41, .48));
+    circle(pul[0], pul[1], 12, DARK, st(.7), 2); circle(pul[0], pul[1], 3, st(.7)); line(pul[0], pul[1] - 12, pul[0], Y(0), st(.4), 1.5);
+    var wX = X(.985), wY0 = shelfY - 8, wY1 = Y(.50) - 8, wY = wY0 + (wY1 - wY0) * tW;
+    var cwX = X(.925), cwY = Y(.44) - (wY - wY0);
+    line(wX, wY - 7, wX, pul[1], st(.45), 1); line(cwX, cwY - 6, cwX, pul[1], st(.45), 1);
+    dbcyl(wX, wY, 16, 16, st(.9));
+    ctx.strokeStyle = st(.6); ctx.lineWidth = 1.5; ctx.strokeRect(cwX - 5, cwY - 6, 10, 12);
+    label(X(.84), Y(.07), '04 DATA MIGRATION', 4); box(4, X(.90), Y(.03), X(1) - X(.90) + 6, Y(.5) - Y(.03));
+
+    // 05 Lever
+    var tL = eo(seg(p, .48, .56)), piv = [X(.80), Y(.52)], arm = sx * .185, tilt = -0.18 + tL * 0.42;
+    ctx.save(); ctx.translate(piv[0], piv[1]); line(-14, 14, 14, 14, st(.6), 2); line(-14, 14, 0, 0, st(.6), 2); line(14, 14, 0, 0, st(.6), 2); bolt(0, 0); ctx.rotate(tilt); line(-arm, 0, arm, 0, st(.8), 3); ctx.restore();
+    if (p >= .48) { var wyS = piv[1] + Math.sin(tilt) * arm - 8; dbcyl(wX, wyS, 16, 16, st(.9)); }
+    label(X(.62), Y(.57), '05 HANDOFF', 5); box(5, piv[0] - arm - 6, piv[1] - 40, arm * 2 + 12, 64);
+
+    // 06 In flight to the connector
+    var sL = [piv[0] - Math.cos(tilt) * arm, piv[1] - Math.sin(tilt) * arm], sw = [X(.20), Y(.66)], tF = seg(p, .56, .68);
+    if (p >= .48) {
+      var fx = sL[0] + (sw[0] - sL[0]) * tF, fy = sL[1] + (sw[1] - sL[1]) * tF - Math.sin(tF * Math.PI) * sy * .22;
+      doc(fx, fy - 8, st(.95));
+      if (tF > 0 && tF < 1) { ctx.setLineDash([2, 6]); ctx.strokeStyle = st(.35); ctx.lineWidth = 1; ctx.beginPath(); for (var q = 0; q <= tF; q += .04) { var qx = sL[0] + (sw[0] - sL[0]) * q, qy = sL[1] + (sw[1] - sL[1]) * q - Math.sin(q * Math.PI) * sy * .22; if (q === 0) ctx.moveTo(qx, qy - 6); else ctx.lineTo(qx, qy - 6); } ctx.stroke(); ctx.setLineDash([]); }
+    }
+
+    // 07 MCP connector: a plug seats into its socket and three sources come online
+    var tSw = eo(seg(p, .68, .73)), on = tSw > .5;
+    ctx.save(); ctx.translate(sw[0], sw[1]); ctx.strokeStyle = st(.6); ctx.lineWidth = 1.5; ctx.strokeRect(-26, -4, 52, 10); bolt(-18, 1); bolt(18, 1);
+    ctx.strokeRect(-6, -14, 12, 10); line(-3, -14, -3, -9, st(.6), 1.5); line(3, -14, 3, -9, st(.6), 1.5);
+    ctx.rotate(-0.6 + tSw * 1.2); line(0, 0, 0, -26, st(.6 + .4 * tSw), 3); ctx.fillStyle = on ? red(.95) : st(.75); ctx.fillRect(-5, -34, 10, 9); ctx.restore();
+    var srcs = [[sw[0] - 40, sw[1] - 30], [sw[0] - 14, sw[1] - 38], [sw[0] + 15, sw[1] - 38]];
+    for (var sj = 0; sj < 3; sj++) { var blink = on ? (.7 + .3 * Math.sin(tm * 3 + sj * 2)) : 0; var sc = on ? red(blink) : st(.45); if (sj === 0) dbcyl(srcs[0][0], srcs[0][1], 14, 14, sc); else if (sj === 1) doc(srcs[1][0], srcs[1][1], sc); else winframe(srcs[2][0] - 9, srcs[2][1] - 6, 18, 13, sc, false); if (on) line(srcs[sj][0], srcs[sj][1] + 9, sw[0], sw[1] - 14, red(.25 * blink), 1); }
+    label(sw[0] - 56, sw[1] - 52, 'DATABASE · DOCS · TICKETS', 7);
+    label(sw[0] - 26, sw[1] + 24, '07 MCP CONNECTOR', 7); box(7, sw[0] - 60, sw[1] - 64, 120, 96);
+
+    // 08 Agents: the current runs the pipe, packets keep flowing once it is live
+    var wire = [[sw[0] + 26, sw[1] + 1], [X(.34), Y(.66)], [X(.34), Y(.84)], [X(.52), Y(.84)]];
+    var tCur = seg(p, .73, .80);
+    for (var w1 = 0; w1 < wire.length - 1; w1++) line(wire[w1][0], wire[w1][1], wire[w1 + 1][0], wire[w1 + 1][1], st(.35), 3);
+    if (tCur > 0) { var segs = 3, lit = tCur * segs; for (var w2 = 0; w2 < segs; w2++) { var f = Math.min(1, Math.max(0, lit - w2)); if (f <= 0) break; var a = wire[w2], b = wire[w2 + 1]; line(a[0], a[1], a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, red(.95), 3); } }
+    if (tCur >= 1) { var lens = [], tot = 0; for (var w3 = 0; w3 < 3; w3++) { var L = Math.hypot(wire[w3 + 1][0] - wire[w3][0], wire[w3 + 1][1] - wire[w3][1]); lens.push(L); tot += L; }
+      for (var pk = 0; pk < 4; pk++) { var d = ((tm * 110 + pk * tot / 4) % tot), w4 = 0; while (w4 < 2 && d > lens[w4]) { d -= lens[w4]; w4++; } var u = d / lens[w4], ax = wire[w4][0] + (wire[w4 + 1][0] - wire[w4][0]) * u, ay = wire[w4][1] + (wire[w4 + 1][1] - wire[w4][1]) * u; circle(ax, ay, 3, '#fff'); } }
+    var valves = [[X(.34), Y(.75), seg(p, .745, .775)], [X(.44), Y(.84), seg(p, .775, .80)]];
+    for (var v = 0; v < valves.length; v++) { var vv = valves[v]; circle(vv[0], vv[1], 11, DARK, vv[2] > 0 ? red(.9) : st(.6), 1.5); ctx.save(); ctx.translate(vv[0], vv[1]); ctx.rotate(eo(vv[2]) * Math.PI + (vv[2] >= 1 ? tm * 1.5 : 0)); spark(0, 0, 6, vv[2] > 0 ? red(.95) : st(.6)); ctx.restore(); label(vv[0] + 16, vv[1] + 4, v === 0 ? 'AGENT A' : 'AGENT B', 8); }
+    label(X(.20), Y(.79), '08 AGENTS', 8); box(8, X(.30), Y(.70), X(.50) - X(.30), Y(.88) - Y(.70));
+
+    // 09 Workflow: gear train, keeps turning once engaged; cursor adds torque
+    var tG = seg(p, .80, .95), rot = eo(tG) * Math.PI * 1.8 + (tG >= 1 ? tm * .9 : 0), lit9 = tCur >= 1;
+    var g1 = [X(.585), Y(.84), sy * .07], g2 = [g1[0] + sy * .07 + sy * .045 - 2, Y(.84), sy * .045], g3 = [g2[0] + sy * .045 + sy * .085 - 2, Y(.82), sy * .085];
+    rot += torque(g2[0], g2[1]) * tm * 2;
+    var col9 = lit9 ? st(.95) : st(.4);
+    gear(g1[0], g1[1], g1[2], 10, rot, col9); gear(g2[0], g2[1], g2[2], 7, -rot * (g1[2] / g2[2]) + .3, col9); gear(g3[0], g3[1], g3[2], 12, rot * (g1[2] / g3[2]) * -1 + .1, col9);
+    label(g1[0] - g1[2], g1[1] + g1[2] + 16, '09 WORKFLOW', 9); box(9, g1[0] - g1[2] - 6, g3[1] - g3[2] - 6, g3[0] + g3[2] - g1[0] + g1[2] + 12, g3[2] * 2 + 12);
+
+    // 10 Deploy: crank and piston; steam when it fires
+    var crankA = rot * (g1[2] / g3[2]) * -1 + .1, pin = [g3[0] + Math.cos(crankA) * g3[2] * .62, g3[1] + Math.sin(crankA) * g3[2] * .62];
+    var cylY = Y(.62), cylX0 = X(.80), cylX1 = X(.985), pistonX = Math.min(cylX1 - 22, Math.max(cylX0 + 8, pin[0] + 10));
+    ctx.strokeStyle = st(.55); ctx.lineWidth = 1.5; ctx.strokeRect(cylX0, cylY - 10, cylX1 - cylX0, 20); bolt(cylX0 + 6, cylY - 16); bolt(cylX1 - 6, cylY - 16);
+    ctx.fillStyle = st(.85); ctx.fillRect(pistonX, cylY - 8, 14, 16);
+    line(pin[0], pin[1], pistonX + 7, cylY, st(.8), 2.5); circle(pin[0], pin[1], 3, st(.9));
+    if (tG > .3 && !reduce) { steamT += dt; if (steamT > .35) { steamT = 0; emit(cylX1 - 4, cylY - 12, 2, 'steam'); } }
+    label(cylX0, cylY - 22, '10 DEPLOY', 10); box(10, cylX0 - 6, cylY - 30, cylX1 - cylX0 + 12, 50);
+
+    // 11 Shipped: hammer strikes the bell, sparks fly
+    var tH = seg(p, .90, .97), hp = [X(.90), Y(.40)], hl = sx * .11, hAng = -1.1 + eo(tH) * 1.35;
+    line(hp[0], hp[1], hp[0], Y(.52) - 14, st(.4), 1.5); bolt(hp[0], hp[1]);
+    ctx.save(); ctx.translate(hp[0], hp[1]); ctx.rotate(hAng); line(0, 0, hl, 0, st(.75), 3); ctx.fillStyle = st(.9); ctx.fillRect(hl - 6, -11, 14, 22); ctx.restore();
+    var bell = [X(.985), Y(.40)]; var tB = seg(p, .97, 1);
+    if (tB > 0 && !rang) { rang = true; if (!reduce) emit(bell[0] - 10, bell[1], 28, 'spark'); } if (tB === 0) rang = false;
+    var wob = tB > 0 ? Math.sin(tm * 18) * .08 * (1 - tB * .5) : 0;
+    ctx.save(); ctx.translate(bell[0], bell[1] - 20); ctx.rotate(wob); ctx.translate(-bell[0], -bell[1] + 20);
+    ctx.beginPath(); ctx.moveTo(bell[0] - 16, bell[1] + 14); ctx.quadraticCurveTo(bell[0] - 16, bell[1] - 18, bell[0], bell[1] - 20); ctx.quadraticCurveTo(bell[0] + 16, bell[1] - 18, bell[0] + 16, bell[1] + 14); ctx.closePath(); ctx.fillStyle = DARK; ctx.fill(); ctx.strokeStyle = tB > 0 ? red(.95) : st(.7); ctx.lineWidth = 2; ctx.stroke();
+    circle(bell[0], bell[1] + 16, 3, tB > 0 ? red(.95) : st(.7)); ctx.restore();
+    if (tB > 0) { for (var rg = 1; rg <= 3; rg++) { var ph = (tm * .8 + rg / 3) % 1; ctx.strokeStyle = red(.5 * (1 - ph)); ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(bell[0], bell[1], 22 + ph * 60, 0, Math.PI * 2); ctx.stroke(); } }
+    label(X(.84), Y(.36), '11 SHIPPED', 11); box(11, hp[0] - 8, bell[1] - 30, bell[0] - hp[0] + 26, 60);
+
+    // 12 Answer: the lamp comes up and the answer document glows
+    var lamp = [X(.60), Y(.64)], tLamp = eo(seg(p, .79, .84)), flick = tLamp > 0 ? (.92 + .08 * Math.sin(tm * 9) * Math.sin(tm * 2.3)) : 0;
+    line(X(.52), Y(.84), lamp[0], Y(.84), st(.35), 3); line(lamp[0], Y(.84), lamp[0], lamp[1] + 20, st(.35), 3);
+    if (tLamp > 0) { var grd = ctx.createRadialGradient(lamp[0], lamp[1], 0, lamp[0], lamp[1], 90 * tLamp * flick + 10); grd.addColorStop(0, red(.5 * tLamp)); grd.addColorStop(1, red(0)); ctx.fillStyle = grd; ctx.fillRect(lamp[0] - 120, lamp[1] - 120, 240, 240); }
+    circle(lamp[0], lamp[1], 15, tLamp > 0 ? red(.15 + .3 * tLamp * flick) : DARK, tLamp > 0 ? red(.95) : st(.7), 2); doc(lamp[0], lamp[1], tLamp > 0 ? red(.95) : st(.7));
+    ctx.strokeStyle = st(.6); ctx.lineWidth = 1.5; ctx.strokeRect(lamp[0] - 7, lamp[1] + 15, 14, 8);
+    label(lamp[0] + 20, lamp[1] + 4, '12 ANSWER', 12); box(12, lamp[0] - 22, lamp[1] - 22, 100, 50);
+
+    drawParts();
+
+    // CAD crosshair with coordinates whenever the cursor is over the drawing
+    if (!narrow && mx > X0 - 40 && mx >= 0 && my > 110) {
+      line(mxs, 0, mxs, H, ink(.07), 1); line(0, mys, W, mys, ink(.07), 1);
+      ctx.font = '500 10px "IBM Plex Mono", monospace'; ctx.fillStyle = st(.55);
+      ctx.fillText('X ' + Math.round(mxs - X0) + '  Y ' + Math.round(mys - Y0), mxs + 12, mys - 8);
+    }
+
+    // Title block, like the corner of a real drawing
+    if (!narrow) {
+      var tbW = 236, tbH = 58, tbX = X(1) - tbW + 6, tbY = Y(1) - tbH - 22;
+      ctx.fillStyle = DARK; ctx.fillRect(tbX, tbY, tbW, tbH); ctx.strokeStyle = st(.35); ctx.lineWidth = 1; ctx.strokeRect(tbX, tbY, tbW, tbH);
+      line(tbX, tbY + 19, tbX + tbW, tbY + 19, st(.35), 1); line(tbX, tbY + 38, tbX + tbW, tbY + 38, st(.35), 1); line(tbX + 150, tbY + 19, tbX + 150, tbY + tbH, st(.35), 1);
+      ctx.font = '500 10px "IBM Plex Mono", monospace'; ctx.fillStyle = st(.75); ctx.fillText('BENNETT WORKS · ENGAGEMENT, TYPICAL', tbX + 8, tbY + 13);
+      ctx.fillStyle = st(.5); ctx.fillText('DWG BW-001  REV C', tbX + 8, tbY + 32); ctx.fillText('SHEET 1 OF 1', tbX + 158, tbY + 32);
+      ctx.fillText('SCALE NTS', tbX + 8, tbY + 51);
+      ctx.fillStyle = red(.9); ctx.fillText('STAGE ' + (sIdx + 1 < 10 ? '0' : '') + (sIdx + 1) + ' / 12', tbX + 158, tbY + 51);
+      // progress ticks along the bottom rail
+      for (var tk = 0; tk < 12; tk++) { var tx = tbX + 8 + tk * 11; ctx.fillStyle = tk <= sIdx ? red(.9) : st(.2); ctx.fillRect(tx, tbY + tbH + 6, 8, 3); }
+    }
+    ctx.restore();
+    ctx.restore();
+    if (intro < 1) { line(sweep, 0, sweep, H, red(.7), 1); ctx.fillStyle = red(.95); ctx.fillRect(sweep - 5, 0, 10, 14); ctx.fillStyle = DARK; ctx.fillRect(sweep - 2, 14, 4, 10); ctx.font = '500 10px "IBM Plex Mono", monospace'; ctx.fillStyle = red(.8); ctx.fillText('PLOTTING ' + Math.round(intro * 100) + '%', Math.min(W - 110, sweep + 12), 24); }
+  }
+
+  // Hover a service and its stages light up on the drawing
+  var hoverEls = document.querySelectorAll('[data-stages]');
+  for (var h = 0; h < hoverEls.length; h++) (function (el) {
+    var ids = el.getAttribute('data-stages').split(',');
+    el.addEventListener('mouseenter', function () { focus = {}; for (var k = 0; k < ids.length; k++) focus[+ids[k]] = true; anyFocus = true; });
+    el.addEventListener('mouseleave', function () { focus = {}; anyFocus = false; });
+  })(hoverEls[h]);
+
+  window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+  window.addEventListener('mouseleave', function () { mx = -9999; my = -9999; });
+  window.addEventListener('resize', resize);
+  window.addEventListener('scroll', function () { scrollY = window.scrollY || 0; if (scrollY > 4) scrolled = true; if (anyFocus && mx >= 0) { var under = document.elementFromPoint(mx, my); if (!under || !under.closest('[data-stages]')) { focus = {}; anyFocus = false; } } }, { passive: true });
+  resize();
+  var last = performance.now();
+  function loop(now) { var dt = Math.min(.05, (now - last) / 1000); last = now; if (!reduce) tm += dt; stepParts(dt); draw(dt); requestAnimationFrame(loop); }
+  requestAnimationFrame(loop);
+})();
+</script>
 </body>
 </html>
