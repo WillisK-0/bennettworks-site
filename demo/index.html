@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="A live demo of what a custom connector can do inside Claude: tables you can sort and filter, charts, and drill-ins, on your data, inside the conversation.">
+<meta name="description" content="A scripted demo on a made-up company's sample data. Pick a business and a role, try the questions that role would ask, and see the tables, documents, approvals and limits on what each person can see.">
 <meta name="theme-color" content="#0E1013">
 <meta property="og:title" content="Demo · Bennett Works">
-<meta property="og:description" content="A live demo of what a custom connector can do inside Claude: tables you can sort and filter, charts, and drill-ins, on your data, inside the conversation.">
+<meta property="og:description" content="A scripted demo on a made-up company's sample data. Pick a business and a role, try the questions that role would ask, and see the tables, documents, approvals and limits on what each person can see.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://bennettworks.io/demo/">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230E1013'/%3E%3Ccircle cx='16' cy='16' r='11.5' fill='none' stroke='%23C7CBD2' stroke-width='2.6'/%3E%3Ccircle cx='16' cy='16' r='3.2' fill='%23C7CBD2'/%3E%3Cpath d='M16 12.8V6.2M13.2 17.6l-5.8 3.4M18.8 17.6l5.8 3.4' stroke='%23C7CBD2' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
@@ -17,7 +17,9 @@
 <style>
 :root { --bg:#0E1013; --bg-2:#15181D; --fg:#F2F3F5; --muted:#A9AEB7; --faint:#6E7480; --steel:#C7CBD2; --line:rgba(201,206,214,.14); --glass:rgba(17,19,24,.74); --signal:#E0374A; --signal-hover:#F04A5C; --signal-glow:rgba(224,55,74,.32); --display:'Plus Jakarta Sans','Helvetica Neue',Arial,sans-serif; --body:'Plus Jakarta Sans','Helvetica Neue',Arial,sans-serif; --mono:'IBM Plex Mono','SF Mono',Menlo,monospace; color-scheme: dark; }
 * { box-sizing: border-box; }
+[hidden] { display: none !important; }
 html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; animation: none !important; } }
 body { margin: 0; background: radial-gradient(1100px 650px at 85% -5%, #1E2229 0%, transparent 60%), radial-gradient(900px 600px at -5% 100%, #181B21 0%, transparent 60%), var(--bg); background-attachment: fixed; color: var(--fg); font-family: var(--body); font-size: 17px; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 a { color: inherit; text-decoration: none; }
 a:focus-visible, button:focus-visible { outline: 2px solid var(--signal); outline-offset: 4px; }
@@ -27,21 +29,22 @@ h1 { font-size: clamp(2.2rem, 4.6vw, 3.6rem); font-weight: 700; line-height: 1.0
 h2 { font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
 h3 { font-size: 1.1rem; font-weight: 700; }
 p { margin: 0; }
-.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1rem; padding: 16px 28px; border-radius: 999px; background: var(--signal); color: #fff; transition: transform .15s, box-shadow .2s, background .2s; }
-.btn:hover { background: var(--signal-hover); transform: translateY(-1px); box-shadow: 0 12px 40px -8px var(--signal-glow); }
+.btn { display: inline-flex; align-items: center; gap: 10px; font-family: var(--display); font-weight: 700; font-size: 1rem; padding: 16px 28px; border-radius: 999px; background: #D12F45; color: #fff; transition: transform .15s, box-shadow .2s, background .2s; }
+.btn:hover { background: #B8283C; transform: translateY(-1px); box-shadow: 0 12px 40px -8px var(--signal-glow); }
 .btn-line { display: inline-flex; align-items: center; gap: 8px; font-weight: 600; padding: 16px 22px; border-radius: 999px; border: 1px solid var(--line); color: var(--fg); transition: border-color .2s, background .2s; }
 .btn-line:hover { border-color: rgba(201,206,214,.4); background: var(--glass); }
 .nav { position: absolute; inset: env(safe-area-inset-top, 0px) 0 auto; z-index: 5; }
 .nav .container { display: flex; align-items: center; justify-content: space-between; height: 76px; }
 .brand { font-family: var(--display); font-weight: 700; font-size: 1.15rem; letter-spacing: -0.02em; display: inline-flex; align-items: center; gap: 12px; }
 .brand svg { width: 30px; height: 30px; color: var(--steel); }
-.brand .wm b { font-weight: 500; color: var(--muted); margin-left: .28em; }
+.brand .wm b { font-weight: 500; color: var(--muted); }
 .nav .right { display: inline-flex; align-items: center; gap: 18px; }
 .nav a.navlink { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 6px; }
 .nav a.navlink:hover, .nav a.navlink.on { color: var(--fg); }
 .nav a.go { font-weight: 600; font-size: .95rem; color: var(--muted); padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); }
 .nav a.go:hover { color: var(--fg); border-color: rgba(201,206,214,.4); }
 @media (max-width: 520px) { .nav .container { height: 68px; } .nav .right { gap: 6px; } .nav a, .brand { white-space: nowrap; } .nav a.go { padding: 8px 12px; font-size: .84rem; } .nav a.navlink { padding: 8px 5px; font-size: .88rem; } .brand { gap: 0; } .brand .wm { display: none; } }
+@media (max-width: 360px) { .nav .right { gap: 2px; } .nav a.navlink { padding: 8px 4px; font-size: .84rem; } .nav a.go { padding: 7px 10px; font-size: .8rem; } }
 footer { border-top: 1px solid var(--line); padding-block: 28px; color: var(--faint); font-size: .9rem; }
 footer .container { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
 .nav, main, footer { position: relative; z-index: 1; }
@@ -50,61 +53,132 @@ footer .container { display: flex; justify-content: space-between; flex-wrap: wr
 
 main { padding-block: 140px 80px; }
 .head { max-width: 46rem; }
-.head .lede { margin-top: 18px; color: var(--muted); font-size: 1.15rem; max-width: 40rem; }
 .head .eyebrow { font-family: var(--mono); font-size: .78rem; letter-spacing: .08em; color: var(--signal); margin-bottom: 14px; }
+.head .lede { margin-top: 18px; color: var(--muted); font-size: 1.15rem; max-width: 40rem; }
+.head .lede b { color: var(--fg); font-weight: 600; }
+
+/* the steps: a real sequence, so they are numbered */
+.steps { margin-top: 48px; display: grid; gap: 26px; }
+.step { display: grid; grid-template-columns: 34px 1fr; gap: 0 14px; align-items: start; }
+.step .num { width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line); display: grid; place-items: center; font-weight: 700; font-size: .9rem; color: var(--steel); background: var(--bg-2); }
+.step .q { font-weight: 700; font-size: 1.05rem; line-height: 34px; }
+.step .sub { color: var(--muted); font-size: .92rem; margin-top: 2px; }
+.step .chips { grid-column: 2; margin-top: 12px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: rgba(21,24,29,.7); color: var(--muted); font: inherit; font-size: .93rem; font-weight: 600; line-height: 1.3; padding: 9px 16px; border-radius: 999px; cursor: pointer; transition: border-color .15s, color .15s, background .15s; text-align: left; }
+.chip:hover:not(:disabled) { color: var(--fg); border-color: rgba(201,206,214,.4); }
+.chip[aria-pressed="true"] { color: var(--fg); border-color: var(--signal); background: rgba(224,55,74,.12); }
+.chip[aria-pressed="true"]::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--signal); flex: none; }
+.chip:disabled { cursor: default; color: #8E949E; border-style: dashed; background: transparent; }
+.chip .soon { font-size: .72rem; font-weight: 600; color: #8E949E; border: 1px solid var(--line); border-radius: 999px; padding: 1px 7px; }
+a.chip.ask { border-style: solid; color: var(--fg); }
+a.chip.ask:hover { border-color: var(--signal); }
+.step .who { grid-column: 2; margin-top: 10px; color: var(--muted); font-size: .9rem; }
 
 /* the replica window */
-.win { margin-top: 40px; border: 1px solid var(--line); border-radius: 16px; background: #FAF9F5; color: #141413; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0,0,0,.7); color-scheme: light; }
-.win .bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #F0EEE6; border-bottom: 1px solid rgba(31,30,29,.12); font-size: .82rem; color: #73726C; }
+.win { margin-top: 18px; border: 1px solid var(--line); border-radius: 16px; background: #FAF9F5; color: #141413; overflow: hidden; box-shadow: 0 30px 80px -30px rgba(0,0,0,.7); color-scheme: light; }
+.win .bar { display: flex; align-items: center; gap: 10px; padding: 10px 14px; background: #F0EEE6; border-bottom: 1px solid rgba(31,30,29,.12); font-size: .82rem; color: #5F5E58; }
 .win .bar .dots { display: inline-flex; gap: 6px; }
 .win .bar .dots i { width: 11px; height: 11px; border-radius: 50%; background: #D9D7CF; display: block; }
-.win .bar .title { flex: 1; text-align: center; font-weight: 500; }
-.win .bar .tag { font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; padding: 3px 8px; border: 1px solid rgba(31,30,29,.2); border-radius: 999px; }
-.win .tabs { display: flex; gap: 6px; padding: 10px 14px 0; background: #F0EEE6; }
-.win .tabs button { border: 1px solid transparent; background: transparent; color: #73726C; font: inherit; font-size: .88rem; font-weight: 600; padding: 7px 14px; border-radius: 10px 10px 0 0; cursor: pointer; }
-.win .tabs button.on { background: #FAF9F5; color: #141413; border-color: rgba(31,30,29,.12); border-bottom-color: #FAF9F5; margin-bottom: -1px; }
-.win .tabs .who { margin-left: auto; align-self: center; font-size: .78rem; color: #73726C; padding-right: 4px; }
-.win .body { display: grid; grid-template-columns: 260px 1fr; min-height: 560px; }
-.win .side { background: #F0EEE6; border-right: 1px solid rgba(31,30,29,.12); padding: 18px 14px; }
-.win .side .lab { font-size: .72rem; letter-spacing: .06em; text-transform: uppercase; color: #73726C; margin: 4px 0 10px 6px; }
-.win .side button { display: block; width: 100%; text-align: left; border: 0; background: transparent; color: #3D3D3A; font: inherit; font-size: .9rem; line-height: 1.35; padding: 9px 10px; border-radius: 10px; cursor: pointer; margin-bottom: 4px; }
-.win .side button:hover { background: rgba(31,30,29,.06); }
-.win .side button.on { background: #fff; color: #141413; box-shadow: 0 1px 2px rgba(0,0,0,.05); }
-.win .side .hint { margin-top: 18px; font-size: .78rem; color: #73726C; padding: 0 6px; line-height: 1.5; }
-.win .chat { padding: 26px 28px 30px; display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+.win .bar .title { flex: 1; text-align: center; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.win .bar .tag { font-family: var(--mono); font-size: .7rem; letter-spacing: .06em; padding: 3px 8px; border: 1px solid rgba(31,30,29,.25); border-radius: 999px; color: #3D3D3A; white-space: nowrap; }
+.win .body { display: grid; grid-template-columns: 280px 1fr; min-height: 600px; }
+.win .side { background: #F0EEE6; border-right: 1px solid rgba(31,30,29,.12); padding: 20px 16px 22px; font-size: .88rem; min-width: 0; }
+.co h2 { font-size: 1.05rem; letter-spacing: -0.01em; color: #141413; }
+.co .blurb { color: #5F5E58; font-size: .82rem; line-height: 1.45; margin-top: 4px; }
+.co .as { margin-top: 12px; font-size: .8rem; color: #3D3D3A; background: #fff; border: 1px solid rgba(31,30,29,.1); border-radius: 10px; padding: 8px 10px; line-height: 1.4; }
+.co .as b { display: block; font-size: .7rem; color: #5F5E58; font-weight: 600; margin-bottom: 1px; }
+.side h3 { font-size: .74rem; font-weight: 700; color: #5F5E58; margin: 20px 0 8px 2px; letter-spacing: .02em; }
+.sys { list-style: none; margin: 0; padding: 0; display: grid; gap: 5px; }
+.sys li { display: flex; align-items: center; gap: 8px; padding: 6px 9px; border-radius: 8px; background: #fff; border: 1px solid rgba(31,30,29,.1); font-size: .82rem; line-height: 1.3; color: #141413; }
+.sys li i { width: 8px; height: 8px; border-radius: 50%; background: #2E8B57; flex: none; }
+.sys li small { margin-left: auto; color: #5F5E58; font-size: .7rem; white-space: nowrap; }
+.sys li.off { background: transparent; border-style: dashed; color: #55544F; }
+.sys li.off i { background: transparent; border: 1.5px solid #A3A19A; }
+.books li i { background: #141413; border-radius: 2px; }
+.qs { display: grid; gap: 4px; }
+.qs button { display: block; width: 100%; text-align: left; border: 1px solid transparent; background: transparent; color: #3D3D3A; font: inherit; font-size: .88rem; line-height: 1.38; padding: 9px 10px; border-radius: 10px; cursor: pointer; }
+.qs button:hover { background: rgba(31,30,29,.06); }
+.qs button[aria-pressed="true"] { background: #fff; color: #141413; border-color: rgba(31,30,29,.12); box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+.qs button:focus-visible, .chat button:focus-visible { outline: 2px solid #141413; outline-offset: 2px; }
+.chat { padding: 26px 28px 30px; display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .msg { max-width: 56rem; }
-.msg.user { align-self: flex-end; background: #E8E6DC; color: #141413; padding: 12px 16px; border-radius: 16px 16px 4px 16px; font-size: .97rem; max-width: 34rem; }
-.msg.ai { font-size: .97rem; color: #141413; line-height: 1.55; }
-.msg.ai .who { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: #73726C; margin-bottom: 6px; }
-.msg.ai .who i { width: 18px; height: 18px; border-radius: 50%; background: #D97757; display: inline-block; }
-.tool { display: inline-flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: .74rem; color: #73726C; border: 1px solid rgba(31,30,29,.15); border-radius: 999px; padding: 4px 10px; background: #fff; }
-.tool b { font-weight: 500; color: #3D3D3A; }
-.panel { border: 0.5px solid rgba(31,30,29,.2); border-radius: 12px; background: #fff; padding: 10px 12px; overflow: hidden; transition: height .2s; }
+.msg.user { align-self: flex-end; background: #E8E6DC; color: #141413; padding: 12px 16px; border-radius: 16px 16px 4px 16px; font-size: .97rem; max-width: 34rem; line-height: 1.5; }
+.msg.ai { font-size: .97rem; color: #141413; line-height: 1.55; max-width: 44rem; }
+.who-ai { display: flex; align-items: center; gap: 8px; font-size: .78rem; color: #5F5E58; }
+.who-ai i { width: 18px; height: 18px; border-radius: 50%; background: #D97757; display: inline-block; }
+.trace { display: flex; flex-wrap: wrap; gap: 6px; }
+.tool { display: inline-flex; align-items: center; gap: 7px; font-size: .78rem; color: #3D3D3A; border: 1px solid rgba(31,30,29,.15); border-radius: 999px; padding: 4px 11px; background: #fff; line-height: 1.35; }
+.tool svg { width: 12px; height: 12px; flex: none; color: #73726C; }
+.panel { border: 0.5px solid rgba(31,30,29,.2); border-radius: 12px; background: #fff; padding: 10px 12px; overflow: hidden; }
 .panel iframe { display: block; width: 100%; border: 0; height: 320px; }
 .panel.full { position: fixed; inset: 24px; z-index: 50; padding: 16px; box-shadow: 0 40px 100px rgba(0,0,0,.5); }
-.panel.full iframe { height: 100%; }
-.note { font-size: .8rem; color: #73726C; }
-.composer { margin-top: auto; border: 1px dashed rgba(31,30,29,.25); border-radius: 14px; background: #F5F4ED; padding: 12px 14px; color: #9C9A92; font-size: .92rem; }
-@media (max-width: 880px) { .win .bar .tag { display: none; } .win .bar .title { white-space: nowrap; } .win .tabs { overflow-x: auto; flex-wrap: nowrap; scrollbar-width: none; } .win .tabs button { white-space: nowrap; flex: none; } .win .tabs .who { display: none; } main { padding-block: 110px 56px; } .win .body { grid-template-columns: 1fr; } .win .side { border-right: 0; border-bottom: 1px solid rgba(31,30,29,.12); } .win .chat { padding: 18px 14px 22px; } .msg.user { max-width: 100%; } .panel.full { inset: 8px; padding: 8px; } }
+.panel.full iframe { height: 100% !important; }
+.saved { font-size: .88rem; color: #3D3D3A; background: #F0EEE6; border-radius: 10px; padding: 10px 14px; display: grid; gap: 4px; max-width: 44rem; }
+.saved b { color: #141413; }
+.composer { margin-top: auto; display: flex; align-items: center; gap: 12px; border: 1px dashed rgba(31,30,29,.3); border-radius: 14px; background: #F5F4ED; padding: 12px 14px; color: #5F5E58; font-size: .9rem; line-height: 1.4; }
+.composer .send { margin-left: auto; width: 30px; height: 30px; border-radius: 8px; background: #D9D7CF; flex: none; display: grid; place-items: center; color: #fff; }
+.loading { padding: 40px 28px; color: #5F5E58; font-size: .95rem; }
 
-/* explainer */
+/* the failure state */
+.fail { margin-top: 18px; border: 1px solid var(--line); border-radius: 16px; background: var(--bg-2); padding: 34px 30px; }
+.fail p { color: var(--muted); margin: 10px 0 22px; max-width: 40rem; }
+
+/* explainer sheets */
 .how { margin-top: 56px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
-.sheet { background: rgba(14,16,19,.86); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; padding: 26px 26px 28px; }
-.sheet .k { font-family: var(--mono); font-size: .74rem; letter-spacing: .08em; color: var(--signal); margin-bottom: 10px; }
-.sheet h3 { margin-bottom: 10px; }
+.sheet { background: rgba(14,16,19,.86); backdrop-filter: blur(12px); border: 1px solid var(--line); border-radius: 14px; padding: 28px 28px 30px; }
+.sheet h2 { font-size: 1.35rem; margin-bottom: 6px; }
+.sheet .kicker { color: var(--steel); font-weight: 600; font-size: .95rem; margin-bottom: 14px; }
 .sheet p { color: var(--muted); font-size: .98rem; }
 .sheet p + p { margin-top: 10px; }
-.sheet code { font-family: var(--mono); font-size: .82rem; color: var(--fg); background: rgba(201,206,214,.08); padding: 2px 6px; border-radius: 6px; }
-pre.code { margin: 12px 0 0; padding: 14px 16px; background: rgba(201,206,214,.06); border: 1px solid var(--line); border-radius: 10px; font-family: var(--mono); font-size: .8rem; line-height: 1.5; color: var(--fg); overflow-x: auto; }
-.sheet a.u { text-decoration: underline; text-decoration-color: var(--signal); text-underline-offset: 3px; }
-.sheet a.u:hover { color: var(--signal-hover); }
-.cta { margin-top: 48px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
-.cta .fine { color: var(--faint); font-size: .9rem; }
-@media (max-width: 880px) { .how { grid-template-columns: 1fr; } }
-body.embed .nav, body.embed .head, body.embed .how, body.embed .cta, body.embed footer { display: none; }
-body.embed { background: transparent; }
-body.embed main { padding: 0; }
-body.embed .win { margin: 0; box-shadow: none; }
+.sheet ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.sheet li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; color: var(--muted); font-size: .96rem; line-height: 1.5; }
+.sheet li svg { width: 20px; height: 20px; color: var(--steel); margin-top: 2px; }
+.sheet li b { color: var(--fg); font-weight: 600; display: block; }
+.sheet .own { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--line); }
+
+/* closing block */
+.close { margin-top: 16px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); gap: 16px; }
+.close .half { border: 1px solid var(--line); border-radius: 16px; background: var(--bg-2); padding: 30px 30px 32px; display: flex; flex-direction: column; gap: 12px; }
+.close .half.real { border-color: rgba(201,206,214,.3); }
+.close ol { margin: 4px 0 0; padding-left: 1.3em; color: var(--muted); display: grid; gap: 6px; }
+.close ol li::marker { color: var(--steel); font-weight: 700; }
+.close p { color: var(--muted); max-width: 36rem; }
+.close .acts { margin-top: 8px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+.vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+@media (max-width: 880px) {
+  main { padding-block: 110px 56px; }
+  .win .bar .title { display: none; }
+  .win .bar .tag { margin-left: auto; }
+  .win .body { grid-template-columns: 1fr; min-height: 0; }
+  .win .side { border-right: 0; border-bottom: 1px solid rgba(31,30,29,.12); padding: 16px 14px 18px; }
+  .sys { display: flex; flex-wrap: wrap; }
+  .sys li { padding: 4px 9px; }
+  .chat { padding: 18px 14px 22px; }
+  .msg.user { max-width: 100%; }
+  .panel { padding: 8px; }
+  .panel.full { inset: 8px; padding: 8px; }
+  .how { grid-template-columns: 1fr; }
+  .sheet, .close .half, .fail { padding: 22px 20px 24px; }
+}
+@media (max-width: 520px) {
+  .step { grid-template-columns: 1fr; }
+  .step .num { display: none; }
+  .step .chips, .step .who { grid-column: 1; }
+  .chip { font-size: .88rem; padding: 8px 13px; }
+}
+
+body.embed .nav, body.embed .head, body.embed #stepLane, body.embed .how, body.embed .close, body.embed footer, body.embed .bgx, body.embed .step .num { display: none; }
+body.embed { background: var(--bg); }   /* dark: the role row's light text needs it, the host frame is cream */
+body.embed main { padding: 12px 12px 14px; }
+body.embed .container { padding: 0; }
+body.embed .steps { margin-top: 0; gap: 0; }
+body.embed .step { grid-template-columns: 1fr; padding: 2px 2px 0; }
+body.embed .step .chips, body.embed .step .who { grid-column: 1; }
+body.embed .step .q { line-height: 1.4; }
+body.embed .win { margin: 14px 0 0; box-shadow: none; }
 </style>
 </head>
 <body>
@@ -116,12 +190,12 @@ body.embed .win { margin: 0; box-shadow: none; }
   <div class="container">
     <a class="brand" href="/" aria-label="Bennett Works">
       <svg viewBox="0 0 32 32" aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round"><circle cx="16" cy="16" r="12.6" stroke-width="2.8"/><circle cx="16" cy="16" r="3.4" fill="currentColor" stroke="none"/><path d="M16 12.6V5.2M13.1 17.7l-6.4 3.7M18.9 17.7l6.4 3.7" stroke-width="2.4"/></svg>
-      <span class="wm">Bennett<b>Works</b></span>
+      <span class="wm">Bennett <b>Works</b></span>
     </a>
     <span class="right">
       <a class="navlink on" href="/demo/">See it work</a>
       <a class="navlink" href="/about/">About</a>
-      <a class="go" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
+      <a class="go" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener" data-conv="book">Schedule a call</a>
     </span>
   </div>
 </div>
@@ -129,53 +203,103 @@ body.embed .win { margin: 0; box-shadow: none; }
 <main>
   <div class="container">
     <div class="head">
-      <div class="eyebrow">LIVE DEMO · SAMPLE DATA</div>
-      <h1>What a custom connector can do inside Claude.</h1>
-      <p class="lede">Most people think a connector means Claude can read your data and answer in text. It can also hand back a working panel: a table you can sort and filter, a policy answer with its source, an approval queue, a form it filled in for you. Pick a seat below, pick a question, click around. One connector, five jobs.</p>
+      <div class="eyebrow">SEE IT WORK · SAMPLE DATA</div>
+      <h1>See what your team could ask AI about your own business.</h1>
+      <p class="lede">We build <b>connectors</b>: a private link between an AI assistant, such as Claude, and the systems your company already runs on, with your rules about who can see what. Pick your kind of business and who is asking. Everything below is a made-up company with made-up records, and the conversation is scripted, so click around freely.</p>
     </div>
 
-    <div class="win" id="win" aria-label="Replica of a Claude Desktop conversation">
-      <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="title">Claude Desktop · replica</span><span class="tag">SIMULATED CHAT · REAL DATA</span></div>
-      <div class="tabs" id="tabs"></div>
-      <div class="body">
-        <aside class="side">
-          <div class="lab" id="sideLab">Ask the connector</div>
-          <div id="prompts"></div>
-          <p class="hint">The conversation is scripted. The panel is the real one the connector renders in Claude Desktop, running on the real sample database.</p>
+    <div class="steps" id="steps">
+      <section class="step" id="stepLane" aria-labelledby="qLane">
+        <span class="num" aria-hidden="true">1</span>
+        <h2 class="q" id="qLane">What kind of business?</h2>
+        <div class="chips" id="lanes" role="group" aria-labelledby="qLane"></div>
+      </section>
+      <section class="step" id="stepRole" aria-labelledby="qRole">
+        <span class="num" aria-hidden="true">2</span>
+        <h2 class="q" id="qRole">Who is asking?</h2>
+        <div class="chips" id="roles" role="group" aria-labelledby="qRole"></div>
+      </section>
+    </div>
+
+    <div class="win" id="win" role="region" aria-label="Replica of a Claude conversation. Scripted chat with sample data.">
+      <div class="bar"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="title" id="winTitle">Claude, replica</span><span class="tag">SCRIPTED CHAT · SAMPLE DATA</span></div>
+      <div class="loading" id="loading" role="status">Loading the sample company…</div>
+      <div class="body" id="body" hidden>
+        <aside class="side" aria-label="Sample company">
+          <div class="co">
+            <h2 id="coName"></h2>
+            <p class="blurb" id="coBlurb"></p>
+            <p class="as"><b>Signed in as</b><span id="coWho"></span></p>
+          </div>
+          <h3 id="hSys">Connected systems</h3>
+          <ul class="sys" id="systems" aria-labelledby="hSys"></ul>
+          <div id="booksWrap">
+            <h3 id="hBooks">Company playbooks</h3>
+            <ul class="sys books" id="books" aria-labelledby="hBooks"></ul>
+          </div>
+          <h3 id="hQs">Questions to ask</h3>
+          <div class="qs" id="qs" role="group" aria-labelledby="hQs"></div>
         </aside>
-        <section class="chat" id="chat">
+        <section class="chat" id="chat" aria-label="Conversation">
           <div class="msg user" id="userMsg"></div>
           <div class="msg ai">
-            <div class="who"><i></i>Claude</div>
-            <div class="tool">Used <b id="toolName">ask-your-data › query</b></div>
+            <div class="who-ai"><i aria-hidden="true"></i>Claude</div>
           </div>
-          <div class="panel" id="panelBox"><iframe id="panel" title="Connector panel" sandbox="allow-scripts allow-forms"></iframe></div>
-          <div class="msg ai" id="aiMsg"></div>
+          <div class="trace" id="trace"></div>
+          <div class="panel" id="panelBox"><iframe id="panel" title="Answer panel" sandbox="allow-scripts allow-forms"></iframe></div>
+          <div class="msg ai" id="aiMsg" aria-live="polite"></div>
+          <div class="saved" id="saved" hidden></div>
           <div id="followups"></div>
-          <div class="composer off" aria-disabled="true"><span>Chat is off in this preview. Pick a question on the left, or click around the panel.</span></div>
+          <div class="composer" aria-disabled="true"><span>This chat is scripted, so there is nothing to type here. Pick another question from the list, or click around the panel.</span><span class="send" aria-hidden="true"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg></span></div>
         </section>
       </div>
     </div>
 
-    <div class="how">
-      <div class="sheet">
-        <div class="k">01 · WHAT JUST HAPPENED</div>
-        <h3>Claude called a tool. The connector answered with a panel.</h3>
-        <p>You asked in plain English. Claude picked the right tool and the connector did the work: a read-only SQL query, a search of the policy handbook, a list of refund requests, or a ticket draft. Instead of pasting the answer as text, it handed back a panel built for that job.</p>
-        <p>Four panels in this demo: a table with a chart and drill-in, a policy answer with the source highlighted, an approval queue with the rule on each row, and a form Claude fills in that you confirm.</p>
-      </div>
-      <div class="sheet">
-        <div class="k">02 · WHY IT MATTERS</div>
-        <h3>Your people stay in the tool they already use.</h3>
-        <p>No new dashboard to learn, no export to Excel. Support asks what's stuck and gets the list, clickable. A new agent asks about policy and gets the actual section, not a guess. Billing approves refunds with the rule right there. Same connector, same permissions, in the chat window they already have open.</p>
-        <p>Claude handles the words. The panel handles the clicks. The important actions, like creating a ticket or approving money, wait for a human to press the button.</p>
-      </div>
+    <div class="fail" id="fail" role="alert" hidden>
+      <h2>The demo could not load</h2>
+      <p>The sample company did not come through. Reload the page to try again, or book a call and we will walk you through it.</p>
+      <a class="btn" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener" data-conv="book">Book a free call</a>
     </div>
 
-    <div class="cta">
-      <a class="btn" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener">Schedule a call</a>
-      <a class="btn-line" href="/#how">See pricing</a>
-      <span class="fine">A prototype week on your data is $1,500, and you keep it. Want this on your database? That is the prototype.</span>
+    <div class="how" id="how">
+      <section class="sheet">
+        <h2>What just happened</h2>
+        <p class="kicker">The question went to the systems the company already runs on.</p>
+        <p>The person asked in plain words. The connector checked what that person is allowed to see, looked up the answer in the company's own records, and sent back a short reply with a working panel: a table you can sort and chart, the right section of a company document, a list of requests waiting for a decision, or a form filled in for someone to check.</p>
+        <p>There is no live AI on this page. The conversation is scripted so you can try it without signing up for anything. The panels work, running on the sample company's made-up records.</p>
+      </section>
+      <section class="sheet">
+        <h2>Why your data stays yours</h2>
+        <p class="kicker">The rules live in your connector, not in the AI.</p>
+        <ul>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="8" width="14" height="5" rx="1.5" fill="currentColor" stroke="none"/><path d="M3 4.5h9M3 16h6"/></svg><span><b>Sensitive details stay out.</b><span id="withheldLine">Fields like account numbers are blacked out and never sent to the AI.</span></span></li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="10" cy="6.5" r="3"/><path d="M4 17c.8-3.2 3.2-5 6-5s5.2 1.8 6 5"/></svg><span><b>Each person sees what their job needs.</b>Switch who is asking and watch the connected systems change. Ask for something off limits and the connector says no and names the rule.</span></li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><rect x="3" y="3" width="14" height="14" rx="3"/><path d="m6.5 10 2.5 2.5 4.5-5"/></svg><span><b>Nothing changes until a person says so.</b>Approvals and forms wait for someone to press the button. The AI can prepare the work, never sign it off.</span></li>
+          <li><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M5 3h10v14H5z"/><path d="M8 7h4M8 10h4M8 13h2"/></svg><span><b>Every question is on record.</b>Who asked, what was looked at and how it ended, so you can check it later.</span></li>
+        </ul>
+        <p class="own">We build the connector for your systems and your rules, and your company owns it.</p>
+      </section>
+    </div>
+
+    <div class="close" id="close">
+      <section class="half">
+        <h2>Picture this on your own systems</h2>
+        <p>In a free 30-minute call you tell us what your team asks every day and where the answers live. We tell you what a connector for your company would take.</p>
+        <div class="acts">
+          <a class="btn" href="https://calendar.app.google/WHUbhDQrg89AKPxZ9" target="_blank" rel="noopener" data-conv="book">Book a free call</a>
+          <a class="btn-line" href="/#how">See pricing</a>
+        </div>
+      </section>
+      <section class="half real" id="realHalf" hidden>
+        <h2>Try the real one in your own Claude</h2>
+        <p>This page was a preview. Add the sample connector to Claude in three steps and ask it anything about the sample company. It works on Claude's free plan. We also build for ChatGPT and other AI tools.</p>
+        <ol>
+          <li>In Claude, open the connector settings and choose to add a custom connector.</li>
+          <li>Paste the Bennett Works sample link and choose no sign-in.</li>
+          <li>Ask it anything about the sample company.</li>
+        </ol>
+        <div class="acts"><a class="btn-line" id="realLink" href="#" target="_blank" rel="noopener">Add to Claude</a></div>
+      </section>
     </div>
   </div>
 </main>
@@ -185,87 +309,245 @@ body.embed .win { margin: 0; box-shadow: none; }
 </footer>
 
 <script>
-if (new URLSearchParams(location.search).has("embed")) document.body.classList.add("embed");
+// Flip to true once the hosted sample connector ships; the URL is only where "Add to Claude" points.
+const REAL_CONNECTOR_LIVE = false;
+const REAL_CONNECTOR_URL = "";
+const DEFAULT_LANE = "wealth-advisory";
+const BOOK_URL = "https://calendar.app.google/WHUbhDQrg89AKPxZ9";
+const PANELS = ["table", "docs", "approvals", "form", "access", "activity", "refusal"];
+const LOOKED_NONE = { access: "Checked what this role is allowed to see", activity: "Looked at the record of questions asked", refusal: "Checked this role's access rules" };
+
+const params = new URLSearchParams(location.search);
+const EMBED = params.has("embed");
+if (EMBED) document.body.classList.add("embed");
+
+// Conversion hook: every booking link carries data-conv="book". Bound per document, so the copy of this page
+// embedded in /start/ does not double-count with start.html's own hook (events do not cross the frame).
+const trackBook = (a) => a.addEventListener("click", () => { window.dataLayer = window.dataLayer || []; window.dataLayer.push({ event: "book_call", page: location.pathname }); if (window.gtag) gtag("event", "book_call"); });
+document.querySelectorAll('[data-conv="book"]').forEach(trackBook);
+
+if (REAL_CONNECTOR_LIVE) { document.getElementById("realHalf").hidden = false; if (REAL_CONNECTOR_URL) document.getElementById("realLink").href = REAL_CONNECTOR_URL; }
+
 (async () => {
   const $ = (id) => document.getElementById(id);
-  const PANELS = ["table", "docs", "approvals", "ticket"];
-  const [data, ...panelSrc] = await Promise.all([fetch("data.json").then(r => r.json()), ...PANELS.map(n => fetch(n + ".html").then(r => r.text()))]);
-  const panelHtml = Object.fromEntries(PANELS.map((n, i) => [n, panelSrc[i]]));
-  let currentPanel = null;
-  let scen = data.scenarios[0], cur = scen.prompts[0];
+  const el = (tag, props = {}, ...kids) => { const n = Object.assign(document.createElement(tag), props); n.append(...kids); return n; };
+  const hide = (n) => { n.setAttribute("aria-hidden", "true"); return n; };
   const frame = $("panel"), box = $("panelBox");
 
   // Light-theme tokens the panel expects from a host, plus the demo host shim. Injected before the panel's own script.
   const tokens = `<style>:root{--color-background-primary:#FFFFFF;--color-background-secondary:#F5F4ED;--color-background-tertiary:#FAF9F5;--color-background-inverse:#141413;--color-background-danger:#F7ECEC;--color-background-success:#E9F1DC;--color-background-warning:#F6EEDF;--color-text-primary:#141413;--color-text-secondary:#3D3D3A;--color-text-tertiary:#73726C;--color-text-inverse:#FFFFFF;--color-text-danger:#7F2C28;--color-text-success:#265B19;--color-text-warning:#5A4815;--color-border-primary:rgba(31,30,29,.4);--color-border-secondary:rgba(31,30,29,.3);--color-border-tertiary:rgba(31,30,29,.15);--color-ring-primary:rgba(20,20,19,.7);--font-sans:"Plus Jakarta Sans",system-ui,sans-serif;--font-mono:"IBM Plex Mono",ui-monospace,monospace;--font-text-sm-size:14px;--font-text-xs-size:12px;--border-radius-md:8px}</style>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">`;
+  // __GEN__ is replaced on every mount, so the page can drop messages from a frame mounted for an earlier lane or role.
   const shim = `<script>
     window.__DEMO_HOST__ = (() => {
+      const GEN = __GEN__;
       let onResult, onInput; const wait = (ms) => new Promise(r => setTimeout(r, ms));
-      const send = (type, payload) => parent.postMessage({ demo: true, type, payload }, "*");
+      const send = (type, payload) => parent.postMessage({ demo: true, gen: GEN, type, payload }, "*");
       window.addEventListener("message", (e) => { const m = e.data; if (!m) return;
         if (m.demo === "result" && onResult) onResult(m.payload);
         if (m.demo === "input" && onInput) onInput({ arguments: m.payload });
         if (m.demo === "view") window.dispatchEvent(new CustomEvent("demo:view", { detail: m.payload })); });
+      document.addEventListener("keydown", (e) => { if (e.key === "Escape") send("escape"); });
       const ro = new ResizeObserver(() => send("size", document.body.scrollHeight)); ro.observe(document.body); document.querySelectorAll("#root").forEach(el => ro.observe(el));
       return {
         onResult: (fn) => { onResult = fn; }, onInput: (fn) => { onInput = fn; },
-        callTool: async (name, args) => { await wait(name === "query" ? 500 : 350); return await new Promise((res) => { const h = (e) => { if (e.data && e.data.demo === "toolResult") { window.removeEventListener("message", h); res(e.data.payload); } }; window.addEventListener("message", h); send("toolRequest", { name, args }); }); },
+        callTool: async (name, args) => { await wait(name === "detail" ? 450 : 350); return await new Promise((res) => { const h = (e) => { if (e.data && e.data.demo === "toolResult") { window.removeEventListener("message", h); res(e.data.payload); } }; window.addEventListener("message", h); send("toolRequest", { name, args }); }); },
         sendMessage: (text) => send("message", text),
         toggleFull: () => send("full"),
         connect: () => send("ready"),
       };
     })();
   <\/script>`;
-  const mountPanel = (name) => { if (currentPanel === name) return false; currentPanel = name; frame.style.height = "160px"; frame.srcdoc = panelHtml[name].replace("<body>", "<body>" + tokens + shim); return true; };
 
-  const post = (demo, payload) => frame.contentWindow.postMessage({ demo, payload }, "*");
-  const result = (p) => ({ content: [{ type: "text", text: JSON.stringify(p.result).slice(0, 2000) }], structuredContent: p.result });
-  const decisions = {}; let ticketSeq = 5000;
-  const allPrompts = data.scenarios.flatMap(sc => sc.prompts.map(p => ({ ...p, scen: sc })));
+  let index = null, lane = null, role = null, q = null, currentPanel = null;
+  let loadSeq = 0;      // bumped by every lane load; a slower, older load gives way to the latest click
+  let gen = 0;          // bumped on every lane or role change; panel messages from an older generation are dropped
+  let wantLane = null;  // the lane the visitor last asked for, loaded or not
+  const laneCache = {}, panelCache = {};
+  // Pretend results for decide and submit_form, held per lane and role, cleared on lane or role change.
+  let mem = { decisions: new Map(), seq: 5000 };
+  const resetMem = () => { mem = { decisions: new Map(), seq: 5000 }; };
 
-  function renderTabs() {
-    const t = $("tabs"); t.replaceChildren();
-    for (const sc of data.scenarios) { const b = document.createElement("button"); b.textContent = sc.label; b.className = sc.id === scen.id ? "on" : ""; b.onclick = () => { scen = sc; load(sc.prompts[0]); }; t.appendChild(b); }
-    const w = document.createElement("span"); w.className = "who"; w.textContent = "Signed in as: " + scen.who; t.appendChild(w);
+  const getJSON = async (url) => { const r = await fetch(url); if (!r.ok) throw new Error(url + " " + r.status); return r.json(); };
+  const getPanel = async (name) => panelCache[name] ??= await fetch(name + ".html").then(r => { if (!r.ok) throw new Error(name + " " + r.status); return r.text(); });
+  const loadLane = async (id) => laneCache[id] ??= await getJSON("lanes/" + encodeURIComponent(id) + ".json");
+
+  // A lane file the page can render without throwing; anything else goes to the failure state.
+  const str = (x) => typeof x === "string";
+  function validLane(l) {
+    if (!l || !str(l.id) || !l.company || !str(l.company.name) || !Array.isArray(l.systems) || !Array.isArray(l.roles) || !l.roles.length) return false;
+    if (!l.systems.every(s => s && str(s.id) && str(s.label))) return false;
+    return l.roles.every(r => r && str(r.id) && str(r.label) && Array.isArray(r.questions) && r.questions.length &&
+      r.questions.every(x => x && str(x.id) && str(x.ask) && str(x.reply) && PANELS.includes(x.panel) && (x.looked == null || Array.isArray(x.looked))));
   }
-  function renderPrompts() {
-    const box = $("prompts"); box.replaceChildren();
-    for (const p of scen.prompts) { const b = document.createElement("button"); b.textContent = p.ask; b.className = p.id === cur.id ? "on" : ""; b.onclick = () => load(p); box.appendChild(b); }
-    $("sideLab").textContent = scen.label + " questions";
+
+  // The failure state. The industry row stays usable when the index loaded, so the visitor can pick another lane.
+  function fail() {
+    loadSeq++; gen++; q = null; currentPanel = null;
+    $("stepLane").hidden = !index; $("stepRole").hidden = true; $("win").hidden = true; $("how").hidden = true; $("fail").hidden = false;
   }
-  function load(p) {
-    cur = p; if (p.scen) scen = p.scen;
-    renderTabs(); renderPrompts();
-    $("userMsg").textContent = p.ask;
-    $("aiMsg").textContent = p.reply.replace("{n}", p.result.rowCount);
-    $("toolName").textContent = "ask-your-data › " + (p.tool ?? "query");
-    $("followups").replaceChildren();
-    if (mountPanel(p.ui ?? "table")) return; // the new frame asks for data when it reports ready
-    post("input", p.args ?? {}); post("result", result(p)); post("view", scen.view);
+  function unfail() { $("stepLane").hidden = false; $("stepRole").hidden = false; $("win").hidden = false; $("how").hidden = false; $("fail").hidden = true; }
+
+  function setURL() {
+    const parts = []; if (EMBED) parts.push("embed");
+    parts.push("lane=" + encodeURIComponent(lane.id), "role=" + encodeURIComponent(role.id));
+    try { history.replaceState(null, "", location.pathname + "?" + parts.join("&") + location.hash); } catch {}
+  }
+
+  // ---- step 1: industries, in the order index.json lists them ----
+  function renderLanes() {
+    const row = $("lanes"); row.replaceChildren();
+    for (const l of index.lanes) {
+      if (!l.live) { row.appendChild(el("button", { type: "button", className: "chip", disabled: true }, l.label, el("span", { className: "soon", textContent: "soon" }))); continue; }
+      const b = el("button", { type: "button", className: "chip", textContent: l.label });
+      b.dataset.lane = l.id; b.setAttribute("aria-pressed", "false");
+      b.onclick = () => { if (wantLane !== l.id || !$("fail").hidden) selectLane(l.id, lane?.id === l.id ? role?.id : null); };
+      row.appendChild(b);
+    }
+    const ask = el("a", { className: "chip ask", href: BOOK_URL, target: "_blank", rel: "noopener", textContent: "Don't see yours?" });
+    ask.setAttribute("aria-label", "Don't see yours? Book a call (opens in a new tab)");
+    ask.dataset.conv = "book"; trackBook(ask);
+    row.appendChild(ask);
+  }
+  const markLanes = (id) => $("lanes").querySelectorAll("button[data-lane]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lane === id)));
+
+  // ---- step 2: roles ----
+  function renderRoles() {
+    const row = $("roles"); row.replaceChildren();
+    for (const r of lane.roles) {
+      const b = el("button", { type: "button", className: "chip", textContent: r.label });
+      b.dataset.role = r.id; b.setAttribute("aria-pressed", "false");
+      b.onclick = () => { if (role?.id !== r.id) selectRole(r.id); };
+      row.appendChild(b);
+    }
+  }
+  const markRoles = () => $("roles").querySelectorAll("button[data-role]").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.role === role.id)));
+
+  // ---- the sidebar ----
+  const sysLabel = (id) => lane.systems.find(s => s.id === id)?.label ?? id;
+  const joinAnd = (xs) => xs.length > 1 ? xs.slice(0, -1).join(", ") + " and " + xs[xs.length - 1] : (xs[0] ?? "");
+  function renderSide() {
+    $("coName").textContent = lane.company.name;
+    $("coBlurb").textContent = lane.company.blurb ?? "";
+    $("coWho").textContent = role.label + (str(role.who) && role.who ? ", " + role.who.charAt(0).toLowerCase() + role.who.slice(1) : "");
+    const sys = $("systems"); sys.replaceChildren();
+    for (const s of lane.systems) {
+      const on = (role.reads ?? []).includes(s.id);
+      sys.appendChild(el("li", { className: on ? "" : "off", title: s.holds ?? "" }, hide(el("i")), s.label, el("small", { textContent: on ? "can read" : "no access" })));
+    }
+    const books = (lane.playbooks ?? []).filter(p => (p.roles ?? []).includes(role.id));
+    $("booksWrap").hidden = !books.length;
+    const bl = $("books"); bl.replaceChildren();
+    for (const p of books) bl.appendChild(el("li", { title: p.summary ?? "" }, hide(el("i")), p.label));
+    const qs = $("qs"); qs.replaceChildren();
+    for (const x of role.questions) {
+      const b = el("button", { type: "button", textContent: x.ask }); b.dataset.q = x.id; b.setAttribute("aria-pressed", "false");
+      b.onclick = () => { if (q?.id !== x.id) loadQuestion(x); };
+      qs.appendChild(b);
+    }
+    // the privacy sheet names this lane's withheld fields
+    const w = [...new Set((lane.withheld ?? []).map(x => String(x.label)).map(s => s.charAt(0).toLowerCase() + s.slice(1)))];
+    $("withheldLine").textContent = w.length ? `In this sample, ${joinAnd(w)} are blacked out and never sent to the AI.` : "Fields like account numbers are blacked out and never sent to the AI.";
+  }
+
+  // ---- the chat ----
+  const icon = (d) => { const s = document.createElementNS("http://www.w3.org/2000/svg", "svg"); s.setAttribute("viewBox", "0 0 16 16"); s.setAttribute("fill", "none"); s.setAttribute("stroke", "currentColor"); s.setAttribute("stroke-width", "1.6"); s.setAttribute("aria-hidden", "true"); const p = document.createElementNS("http://www.w3.org/2000/svg", "path"); p.setAttribute("d", d); s.appendChild(p); return s; };
+
+  function resultFor(x) {
+    let sc = x.result;
+    if (x.panel === "approvals" && sc && Array.isArray(sc.requests)) {
+      sc = { ...sc, requests: sc.requests.map(r => { const d = mem.decisions.get(String(r.id)); return d ? { ...r, outcome: d.status, at: d.recorded_at } : r; }) };
+      if (!sc.decisions && lane.approvals?.decisions) sc.decisions = lane.approvals.decisions;
+    }
+    // optional display labels and money columns ride alongside a table result; the panel works without them
+    if (x.panel === "table" && sc && typeof sc === "object") sc = { ...sc, labels: lane.labels ?? {}, money: lane.money ?? [] };
+    return sc;
+  }
+  const wrap = (sc) => ({ content: [{ type: "text", text: JSON.stringify(sc ?? null).slice(0, 2000) }], structuredContent: sc });
+  const post = (demo, payload) => frame.contentWindow?.postMessage({ demo, payload }, "*");
+  function feed() {
+    const sc = resultFor(q);
+    post("input", q.panel === "docs" && sc?.query ? { query: sc.query } : q.panel === "form" && q.form ? q.form : {});
+    post("result", wrap(sc));
+    if (q.panel === "table") post("view", q.view ?? "table");
+  }
+
+  async function loadQuestion(x) {
+    const g = gen;
+    try {
+      q = x;
+      $("qs").querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.q === x.id)));
+      $("userMsg").textContent = x.ask;
+      const rc = x.result && typeof x.result === "object" && "rowCount" in x.result ? x.result.rowCount : null;
+      $("aiMsg").textContent = x.reply.replaceAll("{n}", rc != null ? String(rc) : "");
+      const tr = $("trace"); tr.replaceChildren();
+      const looked = (x.looked ?? []).map(sysLabel);
+      tr.appendChild(el("span", { className: "tool" }, icon("M7 12.5a5.5 5.5 0 1 0 0-11 5.5 5.5 0 0 0 0 11ZM11 11l3.5 3.5"), looked.length ? "Looked at " + joinAnd(looked) : (LOOKED_NONE[x.panel] ?? "Checked this role's access rules")));
+      const pb = x.playbook && (lane.playbooks ?? []).find(p => p.id === x.playbook);
+      if (pb) tr.appendChild(el("span", { className: "tool" }, icon("M3 2.5h7l3 3v8H3zM6 7h4M6 10h4"), "Ran the company playbook: " + pb.label));
+      const sv = $("saved"); sv.replaceChildren();
+      if (x.before) sv.appendChild(el("div", {}, el("b", { textContent: "Before: " }), String(x.before)));
+      if (x.now) sv.appendChild(el("div", {}, el("b", { textContent: "Now: " }), String(x.now)));
+      sv.hidden = !(x.before || x.now);
+      $("followups").replaceChildren();
+      if (currentPanel === x.panel) { feed(); return; }
+      const html = await getPanel(x.panel);
+      if (g !== gen || q !== x) return;
+      currentPanel = x.panel; frame.style.height = "160px";
+      frame.srcdoc = html.replace("<body>", "<body>" + tokens + shim.replace("__GEN__", String(gen))); // the new frame asks for data when it reports ready
+    } catch { if (g === gen) fail(); }
+  }
+
+  function selectRole(id) {
+    role = lane.roles.find(r => r.id === id) ?? lane.roles[0];
+    gen++; currentPanel = null; resetMem();   // a fresh frame for every role, so nothing from the last role can answer
+    if (box.classList.contains("full")) box.classList.remove("full");
+    markRoles(); renderSide(); setURL();
+    loadQuestion(role.questions[0]);
+  }
+
+  async function selectLane(id, roleId) {
+    const seq = ++loadSeq; wantLane = id; markLanes(id);
+    let l; try { l = await loadLane(id); } catch { if (seq === loadSeq) fail(); return; }
+    if (seq !== loadSeq) return;
+    if (!validLane(l)) { delete laneCache[id]; fail(); return; }
+    try {
+      lane = l; resetMem(); unfail(); renderRoles();
+      $("loading").hidden = true; $("body").hidden = false;
+      selectRole(roleId);
+    } catch { fail(); }
   }
 
   window.addEventListener("message", (e) => {
-    const m = e.data; if (!m || !m.demo) return;
-    if (m.type === "ready") { post("input", cur.args ?? {}); post("result", result(cur)); post("view", scen.view); }
-    if (m.type === "size" && !box.classList.contains("full")) frame.style.height = Math.min(Math.max(m.payload + 4, 120), 900) + "px";
+    if (e.source !== frame.contentWindow) return;
+    const m = e.data; if (!m || !m.demo || !q || m.gen !== gen) return;
+    if (m.type === "ready") feed();
+    if (m.type === "size" && !box.classList.contains("full")) { const cap = innerWidth <= 880 ? Math.max(360, Math.round(innerHeight * .7)) : 900; frame.style.height = Math.min(Math.max(m.payload + 4, 120), cap) + "px"; }
     if (m.type === "toolRequest") {
-      const { name, args } = m.payload;
-      const reply = (sc) => post("toolResult", sc ? { content: [{ type: "text", text: "ok" }], structuredContent: sc } : { content: [{ type: "text", text: "Not in the demo set" }] });
-      if (name === "query" || name === "search_docs" || name === "refund_queue") reply(cur.result);
-      else if (name === "customer_detail") reply(data.details[args.id]);
-      else if (name === "decide_refund") { decisions[args.id] = args.decision; reply({ id: args.id, status: args.decision, recorded_at: new Date().toISOString() }); }
-      else if (name === "create_ticket") reply({ id: ++ticketSeq, ...args, created_at: new Date().toISOString() });
+      const { name, args = {} } = m.payload ?? {};
+      const reply = (sc) => post("toolResult", sc ? { content: [{ type: "text", text: "ok" }], structuredContent: sc } : { content: [{ type: "text", text: "Not in the sample data" }] });
+      const now = new Date().toISOString();
+      if (name === "detail") reply(lane.details?.[role.id]?.[String(args.key)] ?? null);
+      else if (name === "decide") { const out = { id: args.id, status: args.decision, recorded_at: now }; mem.decisions.set(String(args.id), out); reply(out); }
+      else if (name === "submit_form") reply({ ...args, id: ++mem.seq, created_at: now });
       else reply(null);
     }
-    if (m.type === "full") { box.classList.toggle("full"); if (!box.classList.contains("full")) post("size", 0); }
+    if (m.type === "full" || (m.type === "escape" && box.classList.contains("full"))) { box.classList.toggle("full"); if (!box.classList.contains("full")) post("size", 0); }
     if (m.type === "message") {
-      const u = document.createElement("div"); u.className = "msg user"; u.textContent = m.payload;
-      const a = document.createElement("div"); a.className = "msg ai"; a.innerHTML = '<div class="who"><i></i>Claude</div>'; const t = document.createElement("div"); t.textContent = "In Claude Desktop this becomes your next message and Claude acts on it, using the connector's tools. Chat is off in this preview, so it stops here."; a.appendChild(t);
+      const u = el("div", { className: "msg user", textContent: String(m.payload ?? "") });
+      const a = el("div", { className: "msg ai" }, el("div", { className: "who-ai" }, hide(el("i")), "Claude"), el("div", { textContent: "In Claude this becomes your next message, and Claude carries on from it. This preview is scripted, so it stops here." }));
       $("followups").append(u, a); a.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && box.classList.contains("full")) { box.classList.remove("full"); } });
-  load(cur);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && box.classList.contains("full")) box.classList.remove("full"); });
+
+  try { index = await getJSON("lanes/index.json"); if (!Array.isArray(index?.lanes)) throw new Error("bad index"); index.lanes = index.lanes.filter(l => l && str(l.id) && str(l.label)); } catch { index = null; fail(); return; }
+  const live = index.lanes.filter(l => l.live);
+  const asked = params.get("lane");
+  const pick = live.some(l => l.id === asked) ? asked : live.some(l => l.id === DEFAULT_LANE) ? DEFAULT_LANE : live[0]?.id;
+  renderLanes();
+  if (!pick) { fail(); return; }
+  selectLane(pick, params.get("role"));
 })();
 </script>
 </body>

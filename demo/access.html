@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Access</title>
+<style>
+  :root { --bg: var(--color-background-primary, #fff); --bg2: var(--color-background-secondary, #f5f4ed); --fg: var(--color-text-primary, #141413); --fg2: var(--color-text-secondary, #3d3d3a); --fg3: var(--color-text-tertiary, #73726c); --line: var(--color-border-tertiary, rgba(31,30,29,.15)); --line2: var(--color-border-secondary, rgba(31,30,29,.3)); --inv: var(--color-background-inverse, #141413); --invfg: var(--color-text-inverse, #fff); --ok: var(--color-text-success, #265b19); --okbg: var(--color-background-success, #e9f1dc); --warn: var(--color-text-warning, #5a4815); --warnbg: var(--color-background-warning, #f6eedf); --bad: var(--color-text-danger, #7f2c28); --badbg: var(--color-background-danger, #f7ecec); --ring: var(--color-ring-primary, rgba(20,20,19,.7)); --r: var(--border-radius-md, 8px); --sans: var(--font-sans, system-ui, sans-serif); --mono: var(--font-mono, ui-monospace, monospace); }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; font-family: var(--sans); font-size: var(--font-text-sm-size, 14px); line-height: 1.45; color: var(--fg); background: transparent; }
+  .wrap { padding: 4px 2px 8px; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .top b { font-weight: 600; }
+  .muted { color: var(--fg3); font-size: var(--font-text-xs-size, 12px); }
+  .spacer { flex: 1; }
+  .btn { border: 0.5px solid var(--line2); background: transparent; color: var(--fg); font: inherit; font-size: 12px; padding: 6px 12px; border-radius: 999px; cursor: pointer; min-height: 32px; }
+  .btn:hover { background: var(--bg2); }
+  .btn.pri { background: var(--inv); color: var(--invfg); border-color: var(--inv); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .seg { display: inline-flex; border: 0.5px solid var(--line2); border-radius: 999px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; color: var(--fg2); font: inherit; font-size: 12px; padding: 6px 12px; cursor: pointer; min-height: 32px; }
+  .seg button.on { background: var(--inv); color: var(--invfg); }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; border: 0.5px solid var(--line2); }
+  .pill.ok { color: var(--ok); background: var(--okbg); border-color: transparent; }
+  .pill.warn { color: var(--warn); background: var(--warnbg); border-color: transparent; }
+  .pill.bad { color: var(--bad); background: var(--badbg); border-color: transparent; }
+  .foot { display: flex; gap: 10px; align-items: center; margin-top: 8px; color: var(--fg3); font-size: 12px; flex-wrap: wrap; }
+  .empty { color: var(--fg3); padding: 18px; text-align: center; }
+  .skel { height: 100px; background: linear-gradient(90deg, var(--bg2) 25%, var(--bg) 50%, var(--bg2) 75%); background-size: 200% 100%; border-radius: var(--r); animation: sh 1.2s infinite; }
+  @keyframes sh { from { background-position: 200% 0 } to { background-position: -200% 0 } }
+  @media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
+  .grp { border: 0.5px solid var(--line); border-radius: var(--r); padding: 10px 14px; margin-bottom: 10px; background: var(--bg); }
+  .grp h3 { margin: 0 0 6px; font-size: 13px; font-weight: 600; }
+  .grp ul { list-style: none; margin: 0; padding: 0; }
+  .grp li { padding: 5px 0; border-top: 0.5px solid var(--line); display: grid; gap: 1px; }
+  .grp li:first-child { border-top: 0; }
+  .grp li .h, .grp li.h { color: var(--fg3); font-size: 12px; }
+  .grp.no { border-style: dashed; border-color: var(--line2); background: var(--bg2); }
+  .grp.no li.wh::before { content: "Withheld field: "; font-weight: 600; font-size: 12px; color: var(--fg2); }
+  .grp.no li { display: block; }
+</style></head>
+<body>
+<div class="wrap" id="root">
+  <div class="top"><b id="title">Access</b><span class="muted" id="sub">What the connector allows this seat.</span></div>
+  <div id="groups"><div class="skel"></div></div>
+</div>
+<script type="module">
+  const $ = (id) => document.getElementById(id);
+
+  let host;
+  if (window.__DEMO_HOST__) host = window.__DEMO_HOST__;
+  else {
+    const { App } = await import("https://unpkg.com/@modelcontextprotocol/ext-apps@1.7.5/dist/src/app-with-deps.js");
+    const app = new App({ name: "Access", version: "0.3.0" });
+    host = {
+      onResult: (fn) => { app.ontoolresult = fn; }, onInput: (fn) => { app.ontoolinput = fn; },
+      sendMessage: (t) => app.sendMessage({ role: "user", content: [{ type: "text", text: t }] }),
+      connect: () => app.connect(),
+    };
+  }
+  function group(title, items, cls, render) {
+    const g = document.createElement("section"); g.className = "grp" + (cls ? " " + cls : "");
+    const h = document.createElement("h3"); h.textContent = title; g.appendChild(h);
+    const ul = document.createElement("ul");
+    if (!items.length) { const li = document.createElement("li"); li.className = "h"; li.textContent = "Nothing."; ul.appendChild(li); }
+    for (const it of items) { const li = document.createElement("li"); render(li, it); ul.appendChild(li); }
+    g.appendChild(ul); return g;
+  }
+  function show(result) {
+    const sc = result?.structuredContent, box = $("groups"); box.replaceChildren();
+    if (!sc || !Array.isArray(sc.canRead)) { const e = document.createElement("div"); e.className = "empty"; e.textContent = result?.content?.[0]?.text ?? "No result."; box.appendChild(e); return; }
+    $("title").textContent = `Access for ${sc.roleLabel}`;
+    box.append(
+      group("Can read", sc.canRead, "", (li, s) => { const n = document.createElement("span"); n.textContent = s.label; const h = document.createElement("span"); h.className = "h"; h.textContent = s.holds; li.append(n, h); }),
+      group("Can change", sc.canChange ?? [], "", (li, s) => { li.textContent = s; }),
+      group("Never", [...(sc.withheld ?? []).map(s => ({ s, wh: true })), ...(sc.never ?? []).map(s => ({ s, wh: false }))], "no", (li, o) => { if (o.wh) li.className = "wh"; li.append(o.s); }),
+    );
+  }
+  host.onResult?.(show);
+  await host.connect?.();
+</script>
+</body></html>

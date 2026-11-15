@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Form</title>
+<style>
+  :root { --bg: var(--color-background-primary, #fff); --bg2: var(--color-background-secondary, #f5f4ed); --fg: var(--color-text-primary, #141413); --fg2: var(--color-text-secondary, #3d3d3a); --fg3: var(--color-text-tertiary, #73726c); --line: var(--color-border-tertiary, rgba(31,30,29,.15)); --line2: var(--color-border-secondary, rgba(31,30,29,.3)); --inv: var(--color-background-inverse, #141413); --invfg: var(--color-text-inverse, #fff); --ok: var(--color-text-success, #265b19); --okbg: var(--color-background-success, #e9f1dc); --warn: var(--color-text-warning, #5a4815); --warnbg: var(--color-background-warning, #f6eedf); --bad: var(--color-text-danger, #7f2c28); --badbg: var(--color-background-danger, #f7ecec); --ring: var(--color-ring-primary, rgba(20,20,19,.7)); --r: var(--border-radius-md, 8px); --sans: var(--font-sans, system-ui, sans-serif); --mono: var(--font-mono, ui-monospace, monospace); }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; font-family: var(--sans); font-size: var(--font-text-sm-size, 14px); line-height: 1.45; color: var(--fg); background: transparent; }
+  .wrap { padding: 4px 2px 8px; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .top b { font-weight: 600; }
+  .muted { color: var(--fg3); font-size: var(--font-text-xs-size, 12px); }
+  .spacer { flex: 1; }
+  .btn { border: 0.5px solid var(--line2); background: transparent; color: var(--fg); font: inherit; font-size: 12px; padding: 6px 12px; border-radius: 999px; cursor: pointer; min-height: 32px; }
+  .btn:hover { background: var(--bg2); }
+  .btn.pri { background: var(--inv); color: var(--invfg); border-color: var(--inv); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .seg { display: inline-flex; border: 0.5px solid var(--line2); border-radius: 999px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; color: var(--fg2); font: inherit; font-size: 12px; padding: 6px 12px; cursor: pointer; min-height: 32px; }
+  .seg button.on { background: var(--inv); color: var(--invfg); }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; border: 0.5px solid var(--line2); }
+  .pill.ok { color: var(--ok); background: var(--okbg); border-color: transparent; }
+  .pill.warn { color: var(--warn); background: var(--warnbg); border-color: transparent; }
+  .pill.bad { color: var(--bad); background: var(--badbg); border-color: transparent; }
+  .foot { display: flex; gap: 10px; align-items: center; margin-top: 8px; color: var(--fg3); font-size: 12px; flex-wrap: wrap; }
+  .empty { color: var(--fg3); padding: 18px; text-align: center; }
+  .skel { height: 100px; background: linear-gradient(90deg, var(--bg2) 25%, var(--bg) 50%, var(--bg2) 75%); background-size: 200% 100%; border-radius: var(--r); animation: sh 1.2s infinite; }
+  @keyframes sh { from { background-position: 200% 0 } to { background-position: -200% 0 } }
+  @media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
+  form { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+  .f { display: grid; gap: 4px; min-width: 0; }
+  .f.wide { grid-column: 1 / -1; }
+  label { font-size: 12px; color: var(--fg3); }
+  input, select, textarea { font: inherit; font-size: 14px; color: var(--fg); background: var(--bg); border: 0.5px solid var(--line2); border-radius: var(--r); padding: 8px 10px; min-height: 38px; width: 100%; }
+  textarea { min-height: 96px; resize: vertical; line-height: 1.45; }
+  @media (max-width: 520px) { form { grid-template-columns: 1fr; } }
+  .acts { grid-column: 1 / -1; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 4px; }
+  .btn { font-size: 13px; padding: 8px 14px; min-height: 36px; }
+  .done { border: 0.5px solid var(--ok); background: var(--okbg); color: var(--ok); border-radius: var(--r); padding: 12px 14px; margin-top: 8px; }
+  .done b { display: block; margin-bottom: 2px; }
+  .done dl { margin: 6px 0 0; display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; font-size: 12px; }
+  .done dd { margin: 0; overflow-wrap: anywhere; }
+  .done dt { font-weight: 600; }
+</style></head>
+<body>
+<div class="wrap" id="root">
+  <div class="top"><b id="title">Form</b><span class="muted" id="sub">Claude filled this in from the conversation. Check it, then submit.</span></div>
+  <form id="f" aria-labelledby="title"><div id="fields" style="display:contents"></div>
+    <div class="acts"><button type="submit" class="btn pri" id="go">Submit</button><button type="button" class="btn" id="discard">Discard</button><span class="muted" id="status" role="status"></span></div>
+  </form>
+  <div id="result"></div>
+</div>
+<script type="module">
+  const $ = (id) => document.getElementById(id);
+
+  let host;
+  if (window.__DEMO_HOST__) host = window.__DEMO_HOST__;
+  else {
+    const { App } = await import("https://unpkg.com/@modelcontextprotocol/ext-apps@1.7.5/dist/src/app-with-deps.js");
+    const app = new App({ name: "Form", version: "0.3.0" });
+    host = {
+      onResult: (fn) => { app.ontoolresult = fn; }, onInput: (fn) => { app.ontoolinput = fn; },
+      callTool: (name, args) => app.callServerTool({ name, arguments: args }),
+      sendMessage: (t) => app.sendMessage({ role: "user", content: [{ type: "text", text: t }] }),
+      connect: () => app.connect(),
+    };
+  }
+  let spec = null;
+  function fill(sc) {
+    spec = sc; $("title").textContent = sc.title ?? "Form"; $("go").textContent = sc.submitLabel ?? "Submit";
+    const box = $("fields"); box.replaceChildren();
+    for (const f of sc.fields ?? []) {
+      const wrap = document.createElement("div"); wrap.className = "f" + (f.type === "textarea" ? " wide" : "");
+      const id = "f_" + f.name; const lab = document.createElement("label"); lab.htmlFor = id; lab.textContent = f.label ?? f.name;
+      let el;
+      if (f.type === "select") { el = document.createElement("select"); for (const o of f.options ?? []) { const op = document.createElement("option"); op.textContent = o; op.value = o; el.appendChild(op); } el.value = f.value ?? ""; }
+      else if (f.type === "textarea") { el = document.createElement("textarea"); el.value = f.value ?? ""; }
+      else { el = document.createElement("input"); el.type = "text"; el.value = f.value ?? ""; }
+      el.id = id; el.name = f.name; wrap.append(lab, el); box.appendChild(wrap);
+    }
+  }
+  const values = () => Object.fromEntries((spec?.fields ?? []).map(f => [f.name, $("f_" + f.name).value]));
+  $("f").onsubmit = async (e) => {
+    e.preventDefault(); $("go").disabled = true; $("status").textContent = "Submitting…";
+    try {
+      const sent = values(), res = await host.callTool("submit_form", sent);
+      const out = res?.structuredContent; if (!out) throw new Error(res?.content?.[0]?.text ?? "No result");
+      $("f").hidden = true; const d = document.createElement("div"); d.className = "done"; d.setAttribute("role", "status");
+      const b = document.createElement("b"); b.textContent = `Submitted, reference ${out.id}`; d.appendChild(b);
+      const dl = document.createElement("dl");
+      for (const fl of spec.fields) { const dt = document.createElement("dt"); dt.textContent = fl.label ?? fl.name; const dd = document.createElement("dd"); dd.textContent = String(out[fl.name] ?? sent[fl.name] ?? ""); dl.append(dt, dd); }
+      d.appendChild(dl); const s = document.createElement("div"); s.className = "muted"; s.textContent = "Claude can reference it from here on."; d.appendChild(s);
+      $("result").replaceChildren(d); d.tabIndex = -1; d.focus();
+    } catch (err) { $("status").textContent = "Could not submit: " + err.message; $("go").disabled = false; }
+  };
+  $("discard").onclick = () => { $("f").hidden = true; const d = document.createElement("div"); d.className = "muted"; d.setAttribute("role", "status"); d.textContent = "Discarded. Nothing was submitted."; $("result").replaceChildren(d); d.tabIndex = -1; d.focus(); };
+  host.onInput?.(({ arguments: args }) => { if (args && Array.isArray(args.fields)) fill(args); });
+  host.onResult?.((result) => { if (result?.structuredContent && Array.isArray(result.structuredContent.fields)) fill(result.structuredContent); });
+  await host.connect?.();
+</script>
+</body></html>

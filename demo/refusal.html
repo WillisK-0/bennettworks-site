@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><title>Blocked request</title>
+<style>
+  :root { --bg: var(--color-background-primary, #fff); --bg2: var(--color-background-secondary, #f5f4ed); --fg: var(--color-text-primary, #141413); --fg2: var(--color-text-secondary, #3d3d3a); --fg3: var(--color-text-tertiary, #73726c); --line: var(--color-border-tertiary, rgba(31,30,29,.15)); --line2: var(--color-border-secondary, rgba(31,30,29,.3)); --inv: var(--color-background-inverse, #141413); --invfg: var(--color-text-inverse, #fff); --ok: var(--color-text-success, #265b19); --okbg: var(--color-background-success, #e9f1dc); --warn: var(--color-text-warning, #5a4815); --warnbg: var(--color-background-warning, #f6eedf); --bad: var(--color-text-danger, #7f2c28); --badbg: var(--color-background-danger, #f7ecec); --ring: var(--color-ring-primary, rgba(20,20,19,.7)); --r: var(--border-radius-md, 8px); --sans: var(--font-sans, system-ui, sans-serif); --mono: var(--font-mono, ui-monospace, monospace); }
+  * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
+  body { margin: 0; font-family: var(--sans); font-size: var(--font-text-sm-size, 14px); line-height: 1.45; color: var(--fg); background: transparent; }
+  .wrap { padding: 4px 2px 8px; }
+  :focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+  .top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+  .top b { font-weight: 600; }
+  .muted { color: var(--fg3); font-size: var(--font-text-xs-size, 12px); }
+  .spacer { flex: 1; }
+  .btn { border: 0.5px solid var(--line2); background: transparent; color: var(--fg); font: inherit; font-size: 12px; padding: 6px 12px; border-radius: 999px; cursor: pointer; min-height: 32px; }
+  .btn:hover { background: var(--bg2); }
+  .btn.pri { background: var(--inv); color: var(--invfg); border-color: var(--inv); }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .seg { display: inline-flex; border: 0.5px solid var(--line2); border-radius: 999px; overflow: hidden; }
+  .seg button { border: 0; background: transparent; color: var(--fg2); font: inherit; font-size: 12px; padding: 6px 12px; cursor: pointer; min-height: 32px; }
+  .seg button.on { background: var(--inv); color: var(--invfg); }
+  .pill { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 12px; border: 0.5px solid var(--line2); }
+  .pill.ok { color: var(--ok); background: var(--okbg); border-color: transparent; }
+  .pill.warn { color: var(--warn); background: var(--warnbg); border-color: transparent; }
+  .pill.bad { color: var(--bad); background: var(--badbg); border-color: transparent; }
+  .foot { display: flex; gap: 10px; align-items: center; margin-top: 8px; color: var(--fg3); font-size: 12px; flex-wrap: wrap; }
+  .empty { color: var(--fg3); padding: 18px; text-align: center; }
+  .skel { height: 100px; background: linear-gradient(90deg, var(--bg2) 25%, var(--bg) 50%, var(--bg2) 75%); background-size: 200% 100%; border-radius: var(--r); animation: sh 1.2s infinite; }
+  @keyframes sh { from { background-position: 200% 0 } to { background-position: -200% 0 } }
+  @media (prefers-reduced-motion: reduce) { .skel { animation: none; } }
+  .card { border: 1.5px dashed var(--bad); border-radius: var(--r); padding: 14px 16px; background: var(--badbg); color: var(--fg); }
+  .card .k { font-size: 11px; color: var(--fg2); text-transform: uppercase; letter-spacing: .04em; margin-top: 10px; }
+  .card .k:first-child { margin-top: 0; }
+  .card .v { font-size: 14px; overflow-wrap: anywhere; }
+  .card .stop { font-weight: 600; color: var(--bad); font-size: 15px; margin-top: 10px; }
+  .card .line { margin-top: 12px; padding-top: 10px; border-top: 0.5px solid var(--line2); font-size: 13px; color: var(--fg2); }
+</style></head>
+<body>
+<div class="wrap" id="root"><div id="box"><div class="skel"></div></div></div>
+<script type="module">
+  const $ = (id) => document.getElementById(id);
+
+  let host;
+  if (window.__DEMO_HOST__) host = window.__DEMO_HOST__;
+  else {
+    const { App } = await import("https://unpkg.com/@modelcontextprotocol/ext-apps@1.7.5/dist/src/app-with-deps.js");
+    const app = new App({ name: "Blocked request", version: "0.3.0" });
+    host = {
+      onResult: (fn) => { app.ontoolresult = fn; }, onInput: (fn) => { app.ontoolinput = fn; },
+      sendMessage: (t) => app.sendMessage({ role: "user", content: [{ type: "text", text: t }] }),
+      connect: () => app.connect(),
+    };
+  }
+  function show(result) {
+    const sc = result?.structuredContent, box = $("box"); box.replaceChildren();
+    if (!sc || sc.asked == null) { const e = document.createElement("div"); e.className = "empty"; e.textContent = result?.content?.[0]?.text ?? "No result."; box.appendChild(e); return; }
+    const card = document.createElement("section"); card.className = "card"; card.setAttribute("role", "status");
+    const add = (cls, text, label) => { if (label) { const k = document.createElement("div"); k.className = "k"; k.textContent = label; card.appendChild(k); } const d = document.createElement("div"); d.className = cls; d.textContent = text; card.appendChild(d); };
+    add("v", sc.asked, "Asked for");
+    add("stop", `Not available to ${sc.roleLabel}`);
+    add("v", sc.rule, "Rule");
+    add("line", "The connector refused, so none of this data was sent to the AI.");
+    box.appendChild(card);
+  }
+  host.onResult?.(show);
+  await host.connect?.();
+</script>
+</body></html>
