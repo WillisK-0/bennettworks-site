@@ -182,9 +182,10 @@
     }
   }
 
-  // one table renderer, used for the main view and for a drill-in's related tables
-  function buildTable({ columns, rows, sortable, keyCol, caption }) {
-    const outer = centsCols; centsCols = centsIn(columns, rows);
+  // one table renderer, used for the main view and for a drill-in's related tables.
+  // cents: the column money format worked out from every row; the main view passes its full result so a search or chip never changes it.
+  function buildTable({ columns, rows, sortable, keyCol, caption, cents }) {
+    const outer = centsCols; centsCols = cents ?? centsIn(columns, rows);
     try { return buildTableWith({ columns, rows, sortable, keyCol, caption }); } finally { centsCols = outer; }
   }
   function buildTableWith({ columns, rows, sortable, keyCol, caption }) {
@@ -307,7 +308,7 @@
     $("count").textContent = `${rows.length.toLocaleString()} ${rows.length === 1 ? "row" : "rows"}` + (rows.length !== data.rows.length ? ` of ${data.rows.length.toLocaleString()}` : "");
     $("trunc").textContent = data.truncated ? `showing the first ${data.rows.length.toLocaleString()} of ${total.toLocaleString()}` : "";
     renderChips();
-    $("view").replaceChildren(view === "table" ? buildTable({ columns: data.columns, rows, sortable: true, keyCol: data.detailKey }) : renderChart(rows));
+    $("view").replaceChildren(view === "table" ? buildTable({ columns: data.columns, rows, sortable: true, keyCol: data.detailKey, cents: centsIn(data.columns, data.rows) }) : renderChart(rows));
     $("vTable").className = view === "table" ? "on" : ""; $("vChart").className = view === "chart" ? "on" : "";
     $("vTable").setAttribute("aria-pressed", String(view === "table")); $("vChart").setAttribute("aria-pressed", String(view === "chart"));
     if (!$("detail").hidden && selected == null) $("detail").hidden = true;
