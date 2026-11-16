@@ -104,15 +104,17 @@
   const isNum = (v) => typeof v === "number" || (typeof v === "string" && v.trim() !== "" && !isNaN(Number(v)));
   // Optional extras alongside a table result: labels (column name -> display label) and money (column names shown as dollars).
   // Without them, names read as words (underscores to spaces, first letter capitalised) and money falls back to a name check.
-  let labels = {}, moneyCols = new Set();
+  let labels = {}, moneyCols = new Set(), centsCols = new Set();
   const label = (col) => { const k = String(col); if (Object.prototype.hasOwnProperty.call(labels, k)) return String(labels[k]); const t = k.replace(/_+/g, " ").trim(); return t.charAt(0).toUpperCase() + t.slice(1); };
   const MONEY = /^(amount|revenue|total|price|paid|outstanding|mrr|arr|cost|balance|fee|fees|spend|budget)$/i, COUNTY = /(^|_)(count|number|num|qty|quantity|seats|days)(_|$)/i;
   const isMoney = (col) => moneyCols.has(String(col)) || (!COUNTY.test(col) && String(col).split(/[_\s-]+/).some(p => MONEY.test(p)));
   const fmt = (v, col) => {
     if (v == null) return "";
-    if (typeof v === "number") return isMoney(col) ? "$" + v.toLocaleString(undefined, { maximumFractionDigits: 2 }) : Number.isInteger(v) ? String(v) : v.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    if (typeof v === "number") return isMoney(col) ? (v < 0 ? "-$" : "$") + Math.abs(v).toLocaleString(undefined, Number.isInteger(v) && !centsCols.has(String(col)) ? { maximumFractionDigits: 0 } : { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : Number.isInteger(v) ? String(v) : v.toLocaleString(undefined, { maximumFractionDigits: 2 });
     return typeof v === "object" ? JSON.stringify(v) : String(v);
   };
+  // One money format per column: if any amount in a column has cents, the whole column shows two decimals.
+  const centsIn = (columns, rows) => new Set(columns.filter((c, i) => rows.some(r => typeof r[i] === "number" && !Number.isInteger(r[i]))).map(String));
   const pillFor = (v) => {
     const s = String(v).toLowerCase();
     if (["paid", "resolved", "active", "closed", "done", "complete", "completed", "approved"].includes(s)) return "ok";
@@ -146,11 +148,28 @@
     return rows;
   }
 
+  // Filter chips only where they help: a text column with 2 to 8 distinct values and no blanks, on a table with more rows
+  // than that column has values plus two, so each chip narrows the list. At most two chip groups per table.
+  // Dates never get chips (the chart picker skips them too); when more than two columns qualify, status-like ones come first.
+  function chipColumns(columns, rows, skip) {
+    const numeric = (v) => typeof v === "number" || (typeof v === "string" && v.trim() !== "" && !isNaN(Number(v)));
+    const dateLike = (v) => /^\d{4}-\d\d-\d\d/.test(String(v));
+    const statusLike = (c) => /(^|_)(status|state|stage|type|kind|category|renewal)(_|$)/i.test(String(c));
+    const ok = columns.filter((c, i) => {
+      if (skip.has(c) || rows.some(r => r[i] == null || r[i] === "")) return false;   // a blank would show as a "null" chip
+      if (rows.every(r => dateLike(r[i]))) return false;
+      const vals = new Set(rows.map(r => r[i]));
+      return vals.size >= 2 && vals.size <= 8 && rows.length > vals.size + 2 && !rows.every(r => numeric(r[i]));
+    });
+    return [...ok.filter(statusLike), ...ok.filter(c => !statusLike(c))].slice(0, 2);
+  }
+  // end chipColumns
+
   function renderChips() {
     const box = $("chips"); box.replaceChildren();
-    const cats = usable().filter(c => { const i = idx(c); const vals = new Set(data.rows.map(r => r[i])); return vals.size >= 2 && vals.size <= 6 && !data.rows.every(r => isNum(r[i])); });
-    box.hidden = cats.length === 0 || data.rows.length < 4;
-    for (const c of cats.slice(0, 2)) {
+    const cats = chipColumns(data.columns, data.rows, withheldCols());
+    box.hidden = cats.length === 0;
+    for (const c of cats) {
       const i = idx(c), counts = {}; data.rows.forEach(r => { counts[r[i]] = (counts[r[i]] ?? 0) + 1; });
       for (const [v, n] of Object.entries(counts).sort((a, b) => b[1] - a[1])) {
         const on = chipFilters[c] === v;
@@ -165,6 +184,10 @@
 
   // one table renderer, used for the main view and for a drill-in's related tables
   function buildTable({ columns, rows, sortable, keyCol, caption }) {
+    const outer = centsCols; centsCols = centsIn(columns, rows);
+    try { return buildTableWith({ columns, rows, sortable, keyCol, caption }); } finally { centsCols = outer; }
+  }
+  function buildTableWith({ columns, rows, sortable, keyCol, caption }) {
     const wrap = document.createElement("div"); wrap.className = "tblwrap"; wrap.tabIndex = 0; wrap.setAttribute("role", "region"); wrap.setAttribute("aria-label", caption ?? "Table");
     const t = document.createElement("table");
     if (caption) { const cap = document.createElement("caption"); cap.textContent = caption; t.appendChild(cap); }
@@ -297,6 +320,7 @@
     const columns = sc.columns ?? (sc.rows[0] && !Array.isArray(sc.rows[0]) ? Object.keys(sc.rows[0]) : []);
     labels = sc.labels && typeof sc.labels === "object" ? sc.labels : {}; moneyCols = new Set(Array.isArray(sc.money) ? sc.money.map(String) : []);
     data = { columns, rows: toRows(sc.rows, columns), rowCount: sc.rowCount ?? sc.rows.length, truncated: !!sc.truncated, detailKey: sc.detailKey && columns.includes(sc.detailKey) ? sc.detailKey : null };
+    centsCols = centsIn(data.columns, data.rows);
     sortCol = null; filter = ""; $("q").value = ""; chipFilters = {}; selected = null; $("detail").hidden = true; groupCol = null; valueCol = null;
     $("status").textContent = data.detailKey ? `Select a row to open its record. Sort by selecting a column heading.` : "Sort by selecting a column heading.";
     render();

@@ -50,13 +50,16 @@
       connect: () => app.connect(),
     };
   }
+  // What the red line says: a rule for this seat, or something the connector does for no one.
+  function stopText(sc) { return sc.nobody === true ? "The connector does not do this for anyone." : `Not available to ${sc.roleLabel}`; }
+  // end stopText
   function show(result) {
     const sc = result?.structuredContent, box = $("box"); box.replaceChildren();
     if (!sc || sc.asked == null) { const e = document.createElement("div"); e.className = "empty"; e.textContent = result?.content?.[0]?.text ?? "No result."; box.appendChild(e); return; }
     const card = document.createElement("section"); card.className = "card"; card.setAttribute("role", "status");
     const add = (cls, text, label) => { if (label) { const k = document.createElement("div"); k.className = "k"; k.textContent = label; card.appendChild(k); } const d = document.createElement("div"); d.className = cls; d.textContent = text; card.appendChild(d); };
     add("v", sc.asked, "Asked for");
-    add("stop", `Not available to ${sc.roleLabel}`);
+    add("stop", stopText(sc));
     add("v", sc.rule, "Rule");
     add("line", "The connector refused, so none of this data was sent to the AI.");
     box.appendChild(card);
